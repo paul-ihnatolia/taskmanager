@@ -3,7 +3,12 @@
 
     <string name="hello">Hello World, LogInActivity!</string>
     <string name="app_name">TaskManager</string>
-
-    <string name="loginButton">Login</string>
-	<string name="registerButton">Register</string>
+	<string name="enter">Sign in</string>
+	<string name="registration">Register</string>
+	<string name="login">Login</string>
+	<string name="password">Password</string>
+	<string name="firstName">First name</string>
+	<string name="lastName">Last name</string>
+	<string name="remember">Remember me</string>
+	
 </resources>

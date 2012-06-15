@@ -11,15 +11,22 @@
     <application
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name" >
-        <activity
-            android:name=".activities.LogInActivity"
-            android:label="@string/app_name" >
+        
+        
+        <activity android:name=".activities.LogInActivity">
+            
+        </activity>
+        <activity android:name=".activities.Register" android:label="@string/app_name">
+        
+        </activity>
+        
+        <activity android:name=".activities.MainMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+            	<category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        
     </application>
 
 </manifest>
