@@ -2,30 +2,24 @@ package com.taskmanager.asynctasks;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
 public class LoginConnection extends AsyncTask<String,Void,HashMap<String, String>> {
-	//private UrlEncodedFormEntity formEntity;
+
 	private ProgressDialog pleaseWait;
 	
 	public LoginConnection(ProgressDialog pleaseWait) {
@@ -49,11 +43,6 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 		
 		String url = "http://json-login.heroku.com/login";
 		HttpPost request = new HttpPost(url);
-		
-		/*List<NameValuePair> postParameters = new ArrayList<NameValuePair>();
-		postParameters.add(new BasicNameValuePair("login", arg0[0]));
-		postParameters.add(new BasicNameValuePair("pass", arg0[1]));*/
-		
 		JSONObject holder = new JSONObject();
 		JSONObject user = new JSONObject();
 		
@@ -116,7 +105,9 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+		
 		} else {
+			
 			sessionTokens.put("error", "Error");
 		}
 		return sessionTokens;	

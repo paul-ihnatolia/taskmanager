@@ -6,7 +6,7 @@
 
 
     <EditText
-        android:id="@+id/editText1"
+        android:id="@+id/firstName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -18,11 +18,11 @@
 
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/lastName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText1"
-        android:layout_below="@+id/editText1"
+        android:layout_alignLeft="@+id/firstName"
+        android:layout_below="@+id/firstName"
         android:ems="10"
         android:background="@drawable/rounded_edittext"
         android:hint="@string/lastName"
@@ -31,25 +31,24 @@
 
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText3"
-        android:layout_below="@+id/editText3"
+        android:layout_alignLeft="@+id/lastName"
+        android:layout_below="@+id/lastName"
         android:ems="10"
         android:background="@drawable/rounded_edittext"
         android:hint="@string/login"
-        android:inputType="textPassword"
         android:layout_marginTop="15dp" 
         android:padding="8dp"/>
 
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText4"
-        android:layout_below="@+id/editText4"
+        android:layout_alignLeft="@+id/login"
+        android:layout_below="@+id/login"
         android:ems="10"
         android:background="@drawable/rounded_edittext"
         android:hint="@string/password"
@@ -71,12 +70,12 @@
 
 
     <Button
-        android:id="@+id/button1"
+        android:id="@+id/doRegisterB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/editText2"
-        android:layout_alignRight="@+id/editText2"
-        android:layout_below="@+id/editText2"
+        android:layout_alignLeft="@+id/password"
+        android:layout_alignRight="@+id/password"
+        android:layout_below="@+id/password"
         android:layout_marginTop="35dp"
         android:text="@string/remember" />
 
