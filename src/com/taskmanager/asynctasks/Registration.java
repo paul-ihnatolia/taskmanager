@@ -2,7 +2,6 @@ package com.taskmanager.asynctasks;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
@@ -18,11 +17,10 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class LoginConnection extends AsyncTask<String,Void,HashMap<String, String>> {
-
+public class Registration extends AsyncTask<String, Void, String> {
 	private ProgressDialog pleaseWait;
 	
-	public LoginConnection(ProgressDialog pleaseWait) {
+	public Registration(ProgressDialog pleaseWait) {
 		super();
 		this.pleaseWait = pleaseWait;
 	}
@@ -34,35 +32,41 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 		pleaseWait.setMessage("Connecting to server");
 		pleaseWait.show();
 	}
-	
+
 	@Override
-	protected HashMap<String, String> doInBackground(String... arg0) {
-		// TODO Auto-generated method stub
-		String login = arg0[0];
-		String password = arg0[1];
+	protected String doInBackground(String... arg0) {
+		String firstName = arg0[0];
+		String lastName = arg0[1];
+		String login = arg0[2];
+		String password = arg0[3];
 		
-		String url = "http://json-login.heroku.com/login";
+		String url = "";
 		HttpPost request = new HttpPost(url);
 		JSONObject holder = new JSONObject();
 		JSONObject client = new JSONObject();
 		
-		try {
+		try{
+			
+			client.put("firstname", firstName);
+			client.put("lastname", lastName);
 			client.put("login", login);
 			client.put("password", password);
 			holder.put("taskmanager", client);
+			
 			StringEntity se = new StringEntity(holder.toString());
 			request.setEntity(se);
 			request.setHeader("Accept", "taskmanager/json");
 			request.setHeader("Content-Type", "taskmanager/json");
-			Log.i("user", holder.toString());
-		} catch (UnsupportedEncodingException e1) {
+			Log.i("client", holder.toString());
+			
+		}catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-				
+		
 		ResponseHandler<String> rhandler = new BasicResponseHandler();
 		HttpClient httpClient = new DefaultHttpClient();
 		
@@ -78,42 +82,35 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 			e.printStackTrace();
 		}
 		
-		HashMap<String, String> sessionTokens = parseToken(responseBody);
-		return sessionTokens;
-		
+		String errors = parseResponse(responseBody);
+		return errors;
+
 	}
 
-	private HashMap<String, String> parseToken(String jsonResponse) {
-		HashMap<String, String> sessionTokens = new HashMap<String, String>();
+	private String parseResponse(String jsonResponse ) {
+		
+		String error = null;
 		if(jsonResponse != null) {
 		JSONObject jObject;
 		try {
 				jObject = new JSONObject(jsonResponse);
-				JSONObject sessionObject = jObject.getJSONObject("session");
-				String attributeError = sessionObject.getString("error");
-				String attributeToken = sessionObject.getString("auth_token");
-				String attributeConsumerKey = sessionObject.getString("consumer_key");
-				String attributeConsumerSecret = sessionObject
-				.getString("consumer_secret");
-				
-				sessionTokens.put("error", attributeError);
-				sessionTokens.put("auth_token", attributeToken);
-				sessionTokens.put("consumer_key", attributeConsumerKey);
-				sessionTokens.put("consumer_secret", attributeConsumerSecret);
-
+				JSONObject sessionObject = jObject.getJSONObject("session");				
+				error = sessionObject.getString("error");
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
+		
 		} else {
-			
-			sessionTokens.put("error", "Error");
+			error = "Server error";
 		}
-		return sessionTokens;	
+		
+		return error;	
+
 	}
 	
 	@Override
-	protected void onPostExecute(HashMap<String, String> result) {
+	protected void onPostExecute(String result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 		pleaseWait.dismiss();
