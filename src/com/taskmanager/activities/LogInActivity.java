@@ -30,7 +30,7 @@ public class LogInActivity extends Activity implements OnClickListener {
 		sPreferences = getSharedPreferences("CurrentUser", 0);
 		super.onCreate(savedInstanceState);
         if(checkToken()){
-			startActivity(new Intent(LogInActivity.this, MainMenu.class));
+			startActivity(new Intent(LogInActivity.this, MainMenuActivity.class));
 			finish();
 		}	
 		
@@ -63,7 +63,7 @@ public class LogInActivity extends Activity implements OnClickListener {
 
 	private void redirectToRegistration() {
 		//start register activity
-		startActivity(new Intent(LogInActivity.this, Register.class));
+		startActivity(new Intent(LogInActivity.this, RegisterActivity.class));
 	}
 
 	private void doLogin() {
