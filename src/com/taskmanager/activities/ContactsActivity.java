@@ -1,6 +1,6 @@
 package com.taskmanager.activities;
 
-import android.R;
+import com.taskmanager.R;
 import android.app.Activity;
 import android.os.Bundle;
 

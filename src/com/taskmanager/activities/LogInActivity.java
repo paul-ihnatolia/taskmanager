@@ -62,7 +62,7 @@ public class LogInActivity extends Activity implements OnClickListener {
 	}
 
 	private void redirectToRegistration() {
-		//start register activity
+		//start registration activity
 		startActivity(new Intent(LogInActivity.this, RegisterActivity.class));
 	}
 
@@ -76,7 +76,10 @@ public class LogInActivity extends Activity implements OnClickListener {
 		String login = loginF.getText().toString();
 		String password = passwordF.getText().toString();
 		
-		try {
+		if(login.length()>5){
+			loginF.setError("Login is incorrect!");
+		}
+		try {			
 			
 			HashMap<String, String> results = new LoginConnection(pg).execute(login,password).get();
 			Log.i("serverresponse", results.toString());

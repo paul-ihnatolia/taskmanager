@@ -25,14 +25,14 @@ public class MainMenuActivity extends TabActivity {
         intent = new Intent().setClass(this, ContactsActivity.class);
      
         // Initialize a TabSpec for each tab and add it to the TabHost
-        spec = tabHost.newTabSpec("contacts").setIndicator("Êîíòàêòè",
+        spec = tabHost.newTabSpec("contacts").setIndicator("Cotacts",
                           res.getDrawable(R.drawable.ic_tab_contacts))
                       .setContent(intent);
         tabHost.addTab(spec);
      
         // Do the same for the other tabs
         intent = new Intent().setClass(this, TasksActivity.class);
-        spec = tabHost.newTabSpec("tasks").setIndicator("Çàâäàííÿ",
+        spec = tabHost.newTabSpec("tasks").setIndicator("Tasks",
                           res.getDrawable(R.drawable.ic_tab_message))
                       .setContent(intent);
         tabHost.addTab(spec);

@@ -14,17 +14,20 @@
         
         
         <activity android:name=".activities.LogInActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-            	<category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>    
+  
         </activity>
         
         <activity android:name=".activities.RegisterActivity" android:label="@string/app_name">
         </activity>
         
         <activity android:name=".activities.MainMenuActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+            	<category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>  
         </activity>
+        <activity android:name=".activities.ContactsActivity"></activity>
+        <activity android:name=".activities.TasksActivity"></activity>
         
     </application>
 
