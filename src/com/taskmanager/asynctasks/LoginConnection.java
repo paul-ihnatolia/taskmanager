@@ -42,7 +42,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 		String login = arg0[0];
 		String password = arg0[1];
 		
-		String url = "http://10.0.2.2:4567/login";
+		String url = "http://task-manager-project.heroku.com/login";
 		HttpPost request = new HttpPost(url);
 		JSONObject holder = new JSONObject();
 		JSONObject client = new JSONObject();
@@ -82,36 +82,42 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 		}
 		
 		HashMap<String, String> sessionTokens = parseToken(responseBody);
+		Log.i("doInBackgroundST",sessionTokens.toString());
 		return sessionTokens;
 		
 	}
 
 	private HashMap<String, String> parseToken(String jsonResponse) {
+		
 		HashMap<String, String> sessionTokens = new HashMap<String, String>();
 		if(jsonResponse != null) {
 		JSONObject jObject;
+		
 		try {
 				Log.i("serverresponse1", jsonResponse);
 				
 				jObject = new JSONObject(jsonResponse);
 				JSONObject sessionObject = jObject.getJSONObject("login");
-				String attributeError = jObject.getString("error");
-				String attributeToken = sessionObject.getString("auth_token");
-				
+				String attributeError = sessionObject.getString("error");
 				sessionTokens.put("error", attributeError);
-				sessionTokens.put("auth_token", attributeToken);
+				if(attributeError.equals("Success")){
+					String attributeToken = sessionObject.getString("auth_token");
+					sessionTokens.put("auth_token", attributeToken);
+				}	
 				
 			} catch (JSONException e) {
 				
+				Log.e("jsonexInLoginConnection","jsonExceptionInLoginConnection");
 				e.printStackTrace();
 			}
 		
 		} else {
 			
 			sessionTokens.put("error", "Error");
-
+			
 		}
 		
+		Log.i("parsetoken",sessionTokens.toString());
 		return sessionTokens;	
 	
 	}

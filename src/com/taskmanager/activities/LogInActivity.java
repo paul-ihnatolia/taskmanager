@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -76,19 +77,20 @@ public class LogInActivity extends Activity implements OnClickListener {
 		String login = loginF.getText().toString();
 		String password = passwordF.getText().toString();
 		
-		if(login.length()>5){
-			loginF.setError("Login is incorrect!");
-		}
 		try {			
 			
 			HashMap<String, String> results = new LoginConnection(pg).execute(login,password).get();
-			Log.i("serverresponse", results.toString());
+			Log.i("sessiontokens", results.toString());
 			if(results.get("error").equals("Success")){
+				
 				Log.i("loginisation", "Successfull loginisation!");
-				SharedPreferences.Editor editor = sPreferences.edit();
-				editor.putString("auth_token", results.get("auth_token")); 
+			/*	SharedPreferences.Editor editor = sPreferences.edit();
+				editor.putString("auth_token", results.get("auth_token"));*/
+				
 			}else{
 				//handle errors
+				new AlertDialog.Builder(LogInActivity.this).setTitle("Error").setMessage(results.get("error")).
+					setNeutralButton("Ok", null).show();
 				Log.e("loginisaton", results.get("error"));
 			} 
 			

@@ -36,6 +36,7 @@
 	        android:layout_marginBottom="20dp"
 	        android:background="@drawable/rounded_edittext"
 	        android:ems="10"
+	        android:inputType="textPassword" 
 	        android:hint="@string/password"
 	        android:padding="8dp" />
 
@@ -60,5 +61,6 @@
             android:layout_width="131dp"
             android:layout_height="wrap_content"
             android:text="@string/registration" />
+        
     </LinearLayout>
 </RelativeLayout>

@@ -1,9 +1,9 @@
 package com.taskmanager.activities;
 
-import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,17 +29,22 @@ public class RegisterActivity extends Activity {
 		registerB.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
-				
+
 				String firstName = ((TextView) findViewById(R.id.firstName)).getText().toString();
 				String lastName = ((TextView) findViewById(R.id.lastName)).getText().toString();
 				String login = ((TextView) findViewById(R.id.login)).getText().toString();
 				String password = ((TextView) findViewById(R.id.password)).getText().toString();
 				
-				ArrayList<String> errors = CheckFields.checkBeforeRegistraton(firstName,lastName,login,password);
-				if(errors == null){
+				if(CheckFields.checkBeforeRegistraton(firstName, lastName,
+						login, password,RegisterActivity.this)){
+				
+					
 					ProgressDialog pleaseWait = new ProgressDialog(RegisterActivity.this);
+					
 					try {
+					
 						String serverError = new Registration(pleaseWait).execute(firstName,lastName,login,password).get();
+						
 						if(serverError.equals("Success")){
 							//show register succesfully
 							Log.i("registration", "Completed successfuly!");
@@ -47,8 +52,11 @@ public class RegisterActivity extends Activity {
 							startActivity(new Intent(RegisterActivity.this, LogInActivity.class));
 						}else{
 							//show errors
+							new AlertDialog.Builder(RegisterActivity.this).setTitle("Error").setMessage(serverError).
+								setNeutralButton("Ok", null).show();
 							Log.i("registration", serverError);
 						}
+						
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -56,11 +64,9 @@ public class RegisterActivity extends Activity {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-				}else{
-					//error handling
 				}
 			}
 		});
-	}
 	
+		}
 }

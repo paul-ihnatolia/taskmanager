@@ -94,7 +94,7 @@ public class Registration extends AsyncTask<String, Void, String> {
 		JSONObject jObject;
 		try {
 				jObject = new JSONObject(jsonResponse);
-				JSONObject sessionObject = jObject.getJSONObject("session");				
+				JSONObject sessionObject = jObject.getJSONObject("register");				
 				error = sessionObject.getString("error");
 			} catch (JSONException e) {
 				

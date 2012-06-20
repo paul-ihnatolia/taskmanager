@@ -9,6 +9,6 @@
 	<string name="password">Password</string>
 	<string name="firstName">First name</string>
 	<string name="lastName">Last name</string>
-	<string name="remember">Remember me</string>
+	<string name="remember">Register</string>
 	
 </resources>
