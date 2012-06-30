@@ -47,6 +47,8 @@ public class RegisterActivity extends Activity {
 						
 						if(serverError.equals("Success")){
 							//show register succesfully
+							new AlertDialog.Builder(RegisterActivity.this).setTitle("Success").setMessage("Now sign in").
+								setNeutralButton("Ok", null).show();
 							Log.i("registration", "Completed successfuly!");
 							//redirect to login page
 							startActivity(new Intent(RegisterActivity.this, LogInActivity.class));

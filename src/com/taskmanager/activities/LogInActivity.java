@@ -84,8 +84,10 @@ public class LogInActivity extends Activity implements OnClickListener {
 			if(results.get("error").equals("Success")){
 				
 				Log.i("loginisation", "Successfull loginisation!");
-			/*	SharedPreferences.Editor editor = sPreferences.edit();
-				editor.putString("auth_token", results.get("auth_token"));*/
+				SharedPreferences.Editor editor = sPreferences.edit();
+				editor.putString("auth_token", results.get("auth_token"));
+				editor.commit();
+				
 				
 			}else{
 				//handle errors

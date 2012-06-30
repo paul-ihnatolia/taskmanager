@@ -18,6 +18,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class Registration extends AsyncTask<String, Void, String> {
+	
 	private ProgressDialog pleaseWait;
 	
 	public Registration(ProgressDialog pleaseWait) {
@@ -27,7 +28,7 @@ public class Registration extends AsyncTask<String, Void, String> {
 
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
+		
 		pleaseWait.setTitle("Please wait");
 		pleaseWait.setMessage("Connecting to server");
 		pleaseWait.show();
@@ -40,13 +41,12 @@ public class Registration extends AsyncTask<String, Void, String> {
 		String login = arg0[2];
 		String password = arg0[3];
 		
-		String url = "";
+		String url = "http://task-manager-project.heroku.com/register";
 		HttpPost request = new HttpPost(url);
 		JSONObject holder = new JSONObject();
 		JSONObject client = new JSONObject();
 		
-		try{
-			
+		try{			
 			client.put("firstname", firstName);
 			client.put("lastname", lastName);
 			client.put("login", login);
@@ -57,8 +57,7 @@ public class Registration extends AsyncTask<String, Void, String> {
 			request.setEntity(se);
 			request.setHeader("Accept", "taskmanager/json");
 			request.setHeader("Content-Type", "taskmanager/json");
-			Log.i("client", holder.toString());
-			
+			Log.i("client", holder.toString());			
 		}catch (UnsupportedEncodingException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -102,7 +101,9 @@ public class Registration extends AsyncTask<String, Void, String> {
 			}
 		
 		} else {
+			
 			error = "Server error";
+			
 		}
 		
 		return error;	

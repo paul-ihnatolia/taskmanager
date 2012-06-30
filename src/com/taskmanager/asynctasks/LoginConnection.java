@@ -113,7 +113,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 		
 		} else {
 			
-			sessionTokens.put("error", "Error");
+			sessionTokens.put("error", "Server error");
 			
 		}
 		
