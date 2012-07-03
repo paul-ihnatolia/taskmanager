@@ -2,64 +2,81 @@ package com.taskmanager.database.dao;
 
 import java.util.ArrayList;
 
-import com.taskmanager.database.entities.User;
-
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+
+import com.taskmanager.database.entities.Task;
+import com.taskmanager.database.entities.User;
 
 
-public class UserDataSource {
+public class UserDataSource extends BaseAdapter{
+	
+	final String LOG_TAG = "myLogs";
+
 	private static final int USER_COLUMN_ID = 0;
 	private static final int USER_COLUMN_FIRSTNAME= 1;
 	private static final int USER_COLUMN_LASTNAME = 2;
 	private static final int USER_COLUMN_LOGIN = 3;
+	private String[] allUserColumns = { DatabaseHelper.userID, 
+			DatabaseHelper.userFirstname, 
+			DatabaseHelper.userLastname, 
+			DatabaseHelper.userLogin};
 
-	private static SQLiteDatabase database;
+	private Cursor cursor;
+	private static SQLiteDatabase db;
 	private DatabaseHelper dbHelper;
-	//private ContentValues cv = new ContentValues();
-	//private String[] allTaskColumns = { DatabaseHelper.taskAuthor, DatabaseHelper.taskID, DatabaseHelper.taskRecipient, DatabaseHelper.taskComplete, DatabaseHelper.taskContent, DatabaseHelper.taskPriority, DatabaseHelper.taskTime };
-//	private String[] allUserColumns = { DatabaseHelper.userFirstname, DatabaseHelper.userID, DatabaseHelper.userLastname, DatabaseHelper.userLogin};
 
 	public UserDataSource(Context context) {
 		dbHelper = new DatabaseHelper(context);
 	}
 
 	public void open() throws SQLException {
-		database = dbHelper.getWritableDatabase();
+		db = dbHelper.getWritableDatabase();
 	}
 
 	public void close() {
 		dbHelper.close();
 	}
 	
+	public void addItem(User user) {
+		String sql = "insert into users values('" + user.getId() + "','" +user.getFirstname()+ "','" + user.getLastname() +  "','" + user.getLogin() + "');";
+		db.execSQL(sql);
+	}
+	
 	public long insert(User user) {
 		ContentValues cv = new ContentValues();
-		cv.put(DatabaseHelper.userFirstname, user.getFirstname());
-		cv.put(DatabaseHelper.userLastname, user.getLastname());
+	//	cv.put("_id", user.getId());
+		cv.put("firstname", user.getFirstname());
+		cv.put("lastname", user.getLastname());
 		cv.put(DatabaseHelper.userLogin, user.getLogin());
-		return database.insert(DatabaseHelper.userTable, null, cv);
+		return db.insert("users", null, cv);
 	}
 	public int update(User user) {
 		ContentValues cv=new ContentValues();
+		
+		cv.put(DatabaseHelper.userID, user.getId());
 		cv.put(DatabaseHelper.userFirstname, user.getFirstname());
 		cv.put(DatabaseHelper.userLastname, user.getLastname());
 		cv.put(DatabaseHelper.userLogin, user.getLogin());
-		return database.update(DatabaseHelper.userTable, cv, DatabaseHelper.userID + " = ?", new String[] {String.valueOf(user.getId()) });
+		return db.update(DatabaseHelper.userTable, cv, DatabaseHelper.userID + " = ?", new String[] {String.valueOf(user.getId()) });
 	}
 	
 	public int deleteAll() {
-		return database.delete(DatabaseHelper.userTable, null, null);
+		return db.delete(DatabaseHelper.userTable, null, null);
 	}
 	
 	public void delete(long id) {
-		database.delete(DatabaseHelper.userTable, DatabaseHelper.userID + " = ?", new String[] { String.valueOf(id) });
+		db.delete(DatabaseHelper.userTable, DatabaseHelper.userID + " = ?", new String[] { String.valueOf(id) });
 	}
 	
-	public User select(long id) {
-		Cursor mCursor = database.query(DatabaseHelper.userTable, null, DatabaseHelper.userID + " = ?", new String[] {String.valueOf(id)}, null, null, DatabaseHelper.userFirstname);
+	public User select(int id) {
+		Cursor mCursor = db.query(DatabaseHelper.userTable, null, DatabaseHelper.userID + " = ?", new String[] {String.valueOf(id)}, null, null, DatabaseHelper.userFirstname);
 		 
 		mCursor.moveToFirst();
 		String firstname = mCursor.getString(USER_COLUMN_FIRSTNAME); 
@@ -69,17 +86,21 @@ public class UserDataSource {
 		return new User(id, firstname, lastname, login);
 	}
 	public ArrayList<User> selectAll() {
-		Cursor mCursor = database.query(DatabaseHelper.userTable, null, null, null, null, null, DatabaseHelper.userTable);
+		Cursor mCursor = db.query(DatabaseHelper.userTable, allUserColumns, null, null, null, null, null);
+		int idColIndex = mCursor.getColumnIndex ("_id");
+		int firstnameColIndex = mCursor.getColumnIndex ("firstname");
+		int lastnameColIndex = mCursor.getColumnIndex ("lastname");
+		int loginColIndex = mCursor.getColumnIndex ("login");
 		 
 		ArrayList<User> arr = new ArrayList<User>();
 		mCursor.moveToFirst();
 		if (!mCursor.isAfterLast()) {	
 			do {
 				
-				long id = mCursor.getLong(USER_COLUMN_ID);
-				String firstname = mCursor.getString(USER_COLUMN_FIRSTNAME); 
-				String lastname = mCursor.getString(USER_COLUMN_LASTNAME);
-				String login = mCursor.getString(USER_COLUMN_LOGIN);
+				int id = mCursor.getInt(idColIndex);
+				String firstname = mCursor.getString(firstnameColIndex); 
+				String lastname = mCursor.getString(lastnameColIndex);
+				String login = mCursor.getString(loginColIndex);
 				arr.add(new User(id, firstname, lastname, login));
 				
 			} while (mCursor.moveToNext());
@@ -89,10 +110,10 @@ public class UserDataSource {
 	}	  
 	
 	public User selectByLogin(String login) {
-		Cursor mCursor = database.query(DatabaseHelper.userTable, null, DatabaseHelper.userLogin + " = ?", new String[] {String.valueOf(login)}, null, null, DatabaseHelper.userFirstname);
+		Cursor mCursor = db.query(DatabaseHelper.userTable, null, DatabaseHelper.userLogin + " = ?", new String[] {String.valueOf(login)}, null, null, DatabaseHelper.userFirstname);
 		 
 		mCursor.moveToFirst();
-		long id = mCursor.getLong(USER_COLUMN_ID);
+		int id = mCursor.getInt(USER_COLUMN_ID);
 		String firstname = mCursor.getString(USER_COLUMN_FIRSTNAME); 
 		String lastname = mCursor.getString(USER_COLUMN_LASTNAME);
 		mCursor.close();
@@ -100,64 +121,95 @@ public class UserDataSource {
 	}
 	
 	
-
-	public Cursor getTask(String login){
-		return database.query(DatabaseHelper.userTable, null, login, null, null, null, null);
-	}
+//	public Cursor getTask(String login){
+//		return db.query(DatabaseHelper.userTable, null, login, null, null, null, null);
+//	}
+	
 	public Cursor getUserData() {
-	    return database.query(DatabaseHelper.userTable, null, null, null, null, null, null);
+	    return db.query(DatabaseHelper.userTable, null, null, null, null, null, null);
 	  }
 
-	public static Cursor getTaskData(long userID) {
-	    return database.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskAuthor+ " = "
-	        + userID, null, null, null, null);
-	  }
-
-
-/*	public Task createTask (String task) {
-		ContentValues values = new ContentValues();
-		values.put(DatabaseHelper.taskAuthor, task.toString());
-		values.put(DatabaseHelper.taskContent, task.toString());
-		values.put(DatabaseHelper.taskID, task.toString());
-		long insertId = database.insert(DatabaseHelper.taskTable, null,	values);
-		Cursor cursor = database.query(DatabaseHelper.taskTable,
-				allTaskColumns, DatabaseHelper.taskID + " = " + insertId, null,
-				null, null, null);
-		cursor.moveToFirst();
-		Task newTask = cursorToTask(cursor);
-		cursor.close();
-		return newTask;
+	public static Cursor getTaskData(String login) {
+	    return db.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskAuthor+ " = "
+	        + login, null, null, null, null);
 	}
+	
+	public ArrayList<User> getAllUser() {
+		ArrayList<User> users = new ArrayList<User>();
 
-	public void deleteTask (Task Task) {
-		long id = Task.getId();
-		System.out.println("Task deleted with id: " + id);
-		database.delete(DatabaseHelper.taskTable, DatabaseHelper.taskID
-				+ " = " + id, null);
-	}
-
-/*	public List<Task> getAllTask() {
-		List<Task> tasks = new ArrayList<Task>();
-
-		Cursor cursor = database.query(DatabaseHelper.taskTable,
-				allTaskColumns, null, null, null, null, null);
+		Cursor cursor = db.query(DatabaseHelper.userTable, allUserColumns, null, null, null, null, null);
 
 		cursor.moveToFirst();
 		while (!cursor.isAfterLast()) {
-			Task task = cursorToTask(cursor);
-			tasks.add(task);
+			User user = cursorToUser(cursor);
+			users.add(user);
 			cursor.moveToNext();
 		}
 		cursor.close();
-		return tasks;
+		return users;
+	}
+	private User cursorToUser(Cursor cursor) {
+		User user = new User();
+		user.setId(cursor.getInt(cursor.getInt(0)));
+		user.setFirstname(cursor.getString(1));
+		user.setLastname(cursor.getString(2));
+		user.setLogin(cursor.getString(3));
+		return user;
+	}
+	
+	public ArrayList<User> getAllUsers(){
+		ArrayList<User> users = new ArrayList<User>();
+		Cursor c = db.query ("users", null, null, null, null, null, null);
+		
+		// определ€ем номера столбцов по имени в выборке
+		int idColIndex = c.getColumnIndex ("_id");
+		int firstnameColIndex = c.getColumnIndex ("firstname");
+		int lastnameColIndex = c.getColumnIndex ("lastname");
+		int loginColIndex = c.getColumnIndex ("login");
+
+		if (c.moveToFirst ()) {
+
+			do {
+				// получаем значени€ по номерам столбцов и пишем все в лог
+					
+				int id =  c.getInt (idColIndex);
+				String firstname = c.getString (firstnameColIndex);
+				String lastname = c.getString (lastnameColIndex); 
+				String login = c.getString(loginColIndex);
+				// переход на следующую строку
+				// а если следующей нет (текуща€ Ч последн€€), то false Ч выходим из цикла
+				users.add(new User(id, firstname, lastname, login));
+			} while (c.moveToNext ());
+		} 
+
+		return users;
+	}
+	
+	public Cursor getAllEntries() {
+		//—писок колонок базы, которые следует включить в результат
+		// составл€ем запрос к базе
+		return db.query(DatabaseHelper.userTable, allUserColumns,
+				null, null, null, null, DatabaseHelper.userID);
 	}
 
-/*	private Task cursorToTask(Cursor cursor) {
-		Task task = new Task();
-		task.setId(cursor.getLong(0));
-		task.setAuthor(cursor.getString(1));
-		return task;
-	}*/
+	public int getCount() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 
+	public Object getItem(int arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public long getItemId(int arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public View getView(int arg0, View arg1, ViewGroup arg2) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

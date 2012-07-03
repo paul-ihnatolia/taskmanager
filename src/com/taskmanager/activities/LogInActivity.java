@@ -79,21 +79,23 @@ public class LogInActivity extends Activity implements OnClickListener {
 		
 		try {			
 			
-			HashMap<String, String> results = new LoginConnection(pg).execute(login,password).get();
+			HashMap<String, Object> results = new LoginConnection(pg).execute(login,password).get();
 			Log.i("sessiontokens", results.toString());
 			if(results.get("error").equals("Success")){
 				
 				Log.i("loginisation", "Successfull loginisation!");
 				SharedPreferences.Editor editor = sPreferences.edit();
-				editor.putString("auth_token", results.get("auth_token"));
+				editor.putString("auth_token", results.get("auth_token").toString());
 				editor.commit();
+				
+				//creating database and saving friends
 				
 				
 			}else{
 				//handle errors
-				new AlertDialog.Builder(LogInActivity.this).setTitle("Error").setMessage(results.get("error")).
+				new AlertDialog.Builder(LogInActivity.this).setTitle("Error").setMessage(results.get("error").toString()).
 					setNeutralButton("Ok", null).show();
-				Log.e("loginisaton", results.get("error"));
+				Log.e("loginisaton", results.get("error").toString());
 			} 
 			
 		} catch (InterruptedException e) {

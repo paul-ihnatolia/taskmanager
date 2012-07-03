@@ -3,20 +3,23 @@ package com.taskmanager.database.entities;
 import java.io.Serializable;
 
 public class User implements Serializable{
-	public User(long id, String firstname, String lastname, String login) {
+	
+	public User() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+	public User(int id, String firstname, String lastname, String login) {
 		super();
 		this.id = id;
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.login = login;
 	}
-	
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private String firstname;
 	private String lastname;
 	private String login;
-	
 	public long getId() {
 		return id;
 	}
@@ -44,4 +47,5 @@ public class User implements Serializable{
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+	
 }

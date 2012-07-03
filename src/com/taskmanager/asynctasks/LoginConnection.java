@@ -11,6 +11,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.BasicResponseHandler;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,7 +19,7 @@ import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
-public class LoginConnection extends AsyncTask<String,Void,HashMap<String, String>> {
+public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Object>> {
 
 	private ProgressDialog pleaseWait;
 	
@@ -37,7 +38,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 	}
 	
 	@Override
-	protected HashMap<String, String> doInBackground(String... arg0) {
+	protected HashMap<String, Object> doInBackground(String... arg0) {
 		// TODO Auto-generated method stub
 		String login = arg0[0];
 		String password = arg0[1];
@@ -81,15 +82,15 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 			e.printStackTrace();
 		}
 		
-		HashMap<String, String> sessionTokens = parseToken(responseBody);
+		HashMap<String, Object> sessionTokens = parseToken(responseBody);
 		Log.i("doInBackgroundST",sessionTokens.toString());
 		return sessionTokens;
 		
 	}
 
-	private HashMap<String, String> parseToken(String jsonResponse) {
+	private HashMap<String, Object> parseToken(String jsonResponse) {
 		
-		HashMap<String, String> sessionTokens = new HashMap<String, String>();
+		HashMap<String, Object> sessionTokens = new HashMap<String, Object>();
 		if(jsonResponse != null) {
 		JSONObject jObject;
 		
@@ -102,7 +103,13 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 				sessionTokens.put("error", attributeError);
 				if(attributeError.equals("Success")){
 					String attributeToken = sessionObject.getString("auth_token");
+					JSONArray friendsJson = sessionObject.getJSONArray("friends");
+					String [] friends = null;
+					for (int i = 0; i < friendsJson.length(); i++) {
+						friends[i] = friendsJson.get(i).toString();
+					}
 					sessionTokens.put("auth_token", attributeToken);
+					sessionTokens.put("friends", friends);
 				}	
 				
 			} catch (JSONException e) {
@@ -123,7 +130,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Strin
 	}
 	
 	@Override
-	protected void onPostExecute(HashMap<String, String> result) {
+	protected void onPostExecute(HashMap<String, Object> result) {
 		// TODO Auto-generated method stub
 		Log.i("onpostexecuteLoginActivity", "onpostexecuteLoginActivity");
 		super.onPostExecute(result);
