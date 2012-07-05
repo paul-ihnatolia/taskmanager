@@ -4,6 +4,12 @@ import java.io.Serializable;
 
 public class User implements Serializable{
 	
+	public User(String firstname, String lastname, String login) {
+		super();
+		this.firstname = firstname;
+		this.lastname = lastname;
+		this.login = login; 
+	}
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub

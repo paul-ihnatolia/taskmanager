@@ -7,6 +7,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.text.StaticLayout;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -30,17 +31,17 @@ public class UserDataSource extends BaseAdapter{
 
 	private Cursor cursor;
 	private static SQLiteDatabase db;
-	private DatabaseHelper dbHelper;
+	private static DatabaseHelper dbHelper;
 
 	public UserDataSource(Context context) {
 		dbHelper = new DatabaseHelper(context);
 	}
 
-	public void open() throws SQLException {
+	public static void open() throws SQLException {
 		db = dbHelper.getWritableDatabase();
 	}
 
-	public void close() {
+	public static void close() {
 		dbHelper.close();
 	}
 	
@@ -49,7 +50,7 @@ public class UserDataSource extends BaseAdapter{
 		db.execSQL(sql);
 	}
 	
-	public long insert(User user) {
+	public static long insert(User user) {
 		ContentValues cv = new ContentValues();
 	//	cv.put("_id", user.getId());
 		cv.put("firstname", user.getFirstname());
@@ -57,7 +58,7 @@ public class UserDataSource extends BaseAdapter{
 		cv.put(DatabaseHelper.userLogin, user.getLogin());
 		return db.insert("users", null, cv);
 	}
-	public int update(User user) {
+	public static int  update(User user) {
 		ContentValues cv=new ContentValues();
 		
 		cv.put(DatabaseHelper.userID, user.getId());
@@ -67,11 +68,11 @@ public class UserDataSource extends BaseAdapter{
 		return db.update(DatabaseHelper.userTable, cv, DatabaseHelper.userID + " = ?", new String[] {String.valueOf(user.getId()) });
 	}
 	
-	public int deleteAll() {
+	public static int deleteAll() {
 		return db.delete(DatabaseHelper.userTable, null, null);
 	}
 	
-	public void delete(long id) {
+	public static void delete(long id) {
 		db.delete(DatabaseHelper.userTable, DatabaseHelper.userID + " = ?", new String[] { String.valueOf(id) });
 	}
 	
@@ -161,7 +162,7 @@ public class UserDataSource extends BaseAdapter{
 		ArrayList<User> users = new ArrayList<User>();
 		Cursor c = db.query ("users", null, null, null, null, null, null);
 		
-		// определяем номера столбцов по имени в выборке
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		int idColIndex = c.getColumnIndex ("_id");
 		int firstnameColIndex = c.getColumnIndex ("firstname");
 		int lastnameColIndex = c.getColumnIndex ("lastname");
@@ -170,14 +171,14 @@ public class UserDataSource extends BaseAdapter{
 		if (c.moveToFirst ()) {
 
 			do {
-				// получаем значения по номерам столбцов и пишем все в лог
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅ пїЅпїЅпїЅ
 					
 				int id =  c.getInt (idColIndex);
 				String firstname = c.getString (firstnameColIndex);
 				String lastname = c.getString (lastnameColIndex); 
 				String login = c.getString(loginColIndex);
-				// переход на следующую строку
-				// а если следующей нет (текущая — последняя), то false — выходим из цикла
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
+				// пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ), пїЅпїЅ false пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 				users.add(new User(id, firstname, lastname, login));
 			} while (c.moveToNext ());
 		} 
@@ -186,8 +187,8 @@ public class UserDataSource extends BaseAdapter{
 	}
 	
 	public Cursor getAllEntries() {
-		//Список колонок базы, которые следует включить в результат
-		// составляем запрос к базе
+		//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ
 		return db.query(DatabaseHelper.userTable, allUserColumns,
 				null, null, null, null, DatabaseHelper.userID);
 	}

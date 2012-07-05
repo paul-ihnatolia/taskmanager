@@ -31,26 +31,26 @@ public class TaskDataSource {
 			DatabaseHelper.taskTime};
 
 	private static SQLiteDatabase db;
-	private DatabaseHelper dbHelper;
+	private static DatabaseHelper dbHelper;
 	
 	public TaskDataSource(Context context) {
 		dbHelper = new DatabaseHelper(context);
 	}
 
-	public void open() throws SQLException {
+	public static void open() throws SQLException {
 		db = dbHelper.getWritableDatabase();
 	}
 
-	public void close() {
+	public static void close() {
 		dbHelper.close();
 	}
 
-	public void addItem(Task task) {
+	public static void addItem(Task task) {
 		String sql = "insert into tasks values('" + task.getId() + "','" +task.getPriority() +"','" + task.getAuthor() +  "','" + task.getTime() +"','" + task.getRecipient() + "','" + task.getContent() +"','" + task.getComplete() +"');";
 		db.execSQL(sql);
 	}
 
-	public long insert(Task task) {
+	public static long insert(Task task) {
 		ContentValues cv = new ContentValues();
 		cv.put(DatabaseHelper.taskPriority, task.getPriority());
 		cv.put(DatabaseHelper.taskAuthor, task.getAuthor());
@@ -61,7 +61,7 @@ public class TaskDataSource {
 		return db.insert(DatabaseHelper.taskTable, null, cv);
 	}
 	
-	public int update(Task task) {
+	public static int update(Task task) {
 		ContentValues cv=new ContentValues();
 		cv.put(DatabaseHelper.taskPriority, task.getPriority());
 		cv.put(DatabaseHelper.taskAuthor, task.getAuthor());
@@ -71,11 +71,11 @@ public class TaskDataSource {
 		cv.put(DatabaseHelper.taskComplete, task.getComplete());
 		return db.update(DatabaseHelper.taskTable, cv, DatabaseHelper.taskID + " = ?", new String[] {String.valueOf(task.getId()) });
 	}
-	public int deleteAll() {
+	public static int deleteAll() {
 		return db.delete(DatabaseHelper.taskTable, null, null);
 	}
 		
-	public ArrayList<Task> getTask(String login){
+	public static ArrayList<Task> getTask(String login){
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskAuthor + " = ?",  new String[] {login}, null, null, null);
 		
@@ -100,7 +100,7 @@ public class TaskDataSource {
 		
 		return taskList;
 	}
-	public ArrayList<Task> selectAll() {
+	public static ArrayList<Task> selectAll() {
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, null, null, null, null, null);
 		 
 		ArrayList<Task> arr = new ArrayList<Task>();

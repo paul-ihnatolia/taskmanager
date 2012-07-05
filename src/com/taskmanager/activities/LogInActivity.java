@@ -19,6 +19,10 @@ import android.widget.EditText;
 
 import com.taskmanager.R;
 import com.taskmanager.asynctasks.LoginConnection;
+import com.taskmanager.database.dao.TaskDataSource;
+import com.taskmanager.database.dao.UserDataSource;
+import com.taskmanager.database.entities.User;
+import com.taskmanager.service.UpdaterService;
 
 public class LogInActivity extends Activity implements OnClickListener {
     
@@ -86,12 +90,28 @@ public class LogInActivity extends Activity implements OnClickListener {
 				Log.i("loginisation", "Successfull loginisation!");
 				SharedPreferences.Editor editor = sPreferences.edit();
 				editor.putString("auth_token", results.get("auth_token").toString());
-				editor.commit();
+				editor.commit();				
 				
-				//creating database and saving friends
+				User [] friends = (User []) results.get("friends");
 				
+				//open database
+				UserDataSource.open();
+				TaskDataSource.deleteAll();
+
+				//delete existing tables
+				UserDataSource.deleteAll();
+				TaskDataSource.deleteAll();
+				
+				if(friends != null){
+					for (int j = 0; j < friends.length; j++) {
+						UserDataSource.insert(friends[j]);
+					}			
+				}
+				
+				startActivity(new Intent(LogInActivity.this, MainMenuActivity.class));
 				
 			}else{
+				
 				//handle errors
 				new AlertDialog.Builder(LogInActivity.this).setTitle("Error").setMessage(results.get("error").toString()).
 					setNeutralButton("Ok", null).show();

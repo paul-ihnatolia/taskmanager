@@ -28,6 +28,8 @@
         </activity>
         <activity android:name=".activities.ContactsActivity"></activity>
         <activity android:name=".activities.TasksActivity"></activity>
+        <activity android:name=".activities.NewFriendActivity"></activity>
+        <activity android:name=".activities.NewTaskActivity"></activity>
         
     </application>
 

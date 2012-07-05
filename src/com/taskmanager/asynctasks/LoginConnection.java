@@ -15,6 +15,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.taskmanager.database.entities.User;
+
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -104,10 +106,15 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Objec
 				if(attributeError.equals("Success")){
 					String attributeToken = sessionObject.getString("auth_token");
 					JSONArray friendsJson = sessionObject.getJSONArray("friends");
-					String [] friends = null;
+					User [] friends = null;
 					for (int i = 0; i < friendsJson.length(); i++) {
-						friends[i] = friendsJson.get(i).toString();
-					}
+						JSONObject friend = friendsJson.getJSONObject(i);
+						String login = friend.getString("login");
+						String firstName = friend.getString("firstname");
+						String lastName = friend.getString("lastname");
+						User u = new User(firstName, lastName, login);
+						friends[i] = u;
+					}		
 					sessionTokens.put("auth_token", attributeToken);
 					sessionTokens.put("friends", friends);
 				}	

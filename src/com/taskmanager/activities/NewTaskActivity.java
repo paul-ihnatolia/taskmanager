@@ -25,7 +25,7 @@ import android.widget.TextView;
 public class NewTaskActivity extends Activity implements OnClickListener{
 	
 	private EditText taskEdit;
-	private String[] priority = {"Низький", "Середній", "Високий"};
+	private String[] priority = {"пїЅпїЅпїЅпїЅпїЅпїЅпїЅ", "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ", "пїЅпїЅпїЅпїЅпїЅпїЅпїЅ"};
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -35,7 +35,7 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 		TextView text = (TextView) findViewById(R.id.name);
 		Button sendButton = (Button) findViewById(R.id.send);
 		sendButton.setOnClickListener(this);
-		taskEdit = (EditText) findViewById(R.id.editText1);
+		taskEdit = (EditText) findViewById(R.id.serchfield);
 		
 		//Create adapter for spinner
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, priority);
@@ -44,7 +44,7 @@ public class NewTaskActivity extends Activity implements OnClickListener{
         Spinner spinner = (Spinner) findViewById(R.id.spinner1);
 		spinner.setAdapter(adapter);
 		
-		//Вибір пріорітету повідомлення
+		//пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 		    public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -78,7 +78,7 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 		switch (v.getId()) {
 	
 		case R.id.send:
-			//Тут має бути метод для відправки повідомлення
+			//пїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			break;
 		}
 	}

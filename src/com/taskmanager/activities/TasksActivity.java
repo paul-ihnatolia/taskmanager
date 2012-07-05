@@ -1,86 +1,58 @@
 package com.taskmanager.activities;
 
 
-import android.R;
-import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.ViewGroup.LayoutParams;
-import android.widget.LinearLayout;
-import android.widget.ScrollView;
-import android.widget.TextView;
+import java.util.List;
 
-public class TasksActivity extends Activity{
+import com.taskmanager.adapter.TasksArrayAdapter;
+import com.taskmanager.database.dao.TaskDataSource;
+import com.taskmanager.database.entities.Task;
+
+import android.app.ListActivity;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.ListView;
+import android.widget.Toast;
+
+public class TasksActivity extends ListActivity{
+	private List<Task> list;
+	private TaskDataSource taskData;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+			
+		taskData = new TaskDataSource(this);
+		list = taskData.selectAll();
 		
-		ScrollView sroll = new ScrollView(this);
-        sroll.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
-        
-		LinearLayout layout = new LinearLayout(this);
-	    layout.setOrientation(LinearLayout.VERTICAL);
-	    layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-	    
-	    sroll.addView(layout);
-	    
-		onCreateTask(layout, 3, "Taras", "Hello", "12.12.2012");
-		onCreateTask(layout, 3, "√ê√≥√±√´√†√≠", "√è√∞√®√¢¬≥√≤", "07.20.2012");
-		onCreateTask(layout, 1, "Taras", "Hello", "12.12.2012");
-		onCreateTask(layout, 2, "√ê√≥√±√´√†√≠", "√è√∞√®√¢¬≥√≤", "07.20.2012");
-		onCreateTask(layout, 2, "Taras", "Hello", "12.12.2012");
-		onCreateTask(layout, 1, "√ê√≥√±√´√†√≠", "√è√∞√®√¢¬≥√≤", "07.20.2012");
-		
-		setContentView(sroll);		
+        TasksArrayAdapter adapter = new TasksArrayAdapter(this, list);
+        setListAdapter(adapter);
 	}
-	
-	private void onCreateTask(LinearLayout layout, int priority, String author, String task, String data) {
-	    
-		int white = Color.parseColor("#ffffff");
+	public void onListItemClick(ListView parent, View v, int position, long id) {
+		
+		Task task = list.get(position);
 		int green = Color.parseColor("#99cc00");
 		int blue = Color.parseColor("#34b6e4");
 		int red = Color.parseColor("#ff4444");
+		int proirityColor = -1;
 		
-		LinearLayout layout2 = new LinearLayout(this);
-	    layout2.setOrientation(LinearLayout.VERTICAL);
-	    layout2.setPadding(5, 5, 5, 5);
-	    
-	    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-	    	     LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-	    
-	    layoutParams.setMargins(0, 0, 0, 5);
-	     
-	    if (priority == 1)
-	    	layout2.setBackgroundColor(green);
-	    else if (priority == 2) 
-	    	layout2.setBackgroundColor(blue);
-	    else if (priority == 3) 
-	    	layout2.setBackgroundColor(red);
-	    else
-	    	Log.e("priority", "Invalid priority");
-		
-	    layout.addView(layout2, layoutParams);
-	    
-	    TextView titleView = new TextView(this);
-	    titleView.setGravity(0x11);
-	    titleView.setTextAppearance(this, android.R.attr.textAppearanceLarge);
-	    titleView.setText(author);
-	    titleView.setTextColor(white);
-	    layout2.addView(titleView);
-
-	    TextView textView = new TextView(this);
-	    textView.setGravity(0x03);
-	    textView.setTextAppearance(this, android.R.attr.textAppearanceLarge);
-	    textView.setText(task);
-	    textView.setTextColor(white);
-	    layout2.addView(textView);
-	    
-	    TextView dataView = new TextView(this);
-	    dataView.setGravity(0x05);
-	    dataView.setTextAppearance(this, android.R.attr.textAppearanceSmall);
-	    dataView.setText(data);
-	    dataView.setTextColor(white);
-	    layout2.addView(dataView);
+		if(task.getComplete().equals("false")){
+			task.setComplete("true");
+			taskData.update(task);
+			
+			if (list.get(position).getPriority() == 1)
+	        	proirityColor = red;
+		    else if (list.get(position).getPriority() == 2) 
+		    	proirityColor = blue;
+		    else 
+		    	proirityColor = green;
+			v.setBackgroundColor(proirityColor);
+			
+		}
+		else{
+			Toast toast = Toast.makeText(this, "«‡‚‰‡ÌÌˇ ‚ÊÂ ÔÓ˜ËÚ‡ÌÂ", Toast.LENGTH_SHORT);;
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
+		}
 	}
+
 }
