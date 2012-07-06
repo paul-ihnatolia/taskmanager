@@ -12,21 +12,33 @@ import com.taskmanager.database.entities.User;
 import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.Toast;
 
 
 
 public class ContactsActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-				
-		SimpleAdapter adapter = new SimpleAdapter(this, createContactsList(), android.R.layout.simple_list_item_2, 
-	            new String[] {"name", "login"}, 
-	            new int[] {android.R.id.text1, android.R.id.text2});
-	  
-	    setListAdapter(adapter);    
+		
+		try{
+			SimpleAdapter adapter = new SimpleAdapter(this, createContactsList(), android.R.layout.simple_list_item_2, 
+		            new String[] {"name", "login"}, 
+		            new int[] {android.R.id.text1, android.R.id.text2});
+			
+			setListAdapter(adapter);
+		}
+		catch (NullPointerException e) {
+			Log.e("error", "NullPointerException");
+			
+			Toast toast = Toast.makeText(this, "Ó âàñ ùå íå ìàº êîíòàêò³â", Toast.LENGTH_LONG);
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
+		}
 	}
 
 	private List<Map<String, String>> createContactsList() {

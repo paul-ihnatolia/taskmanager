@@ -10,6 +10,7 @@ import com.taskmanager.database.entities.Task;
 import android.app.ListActivity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
@@ -20,12 +21,21 @@ public class TasksActivity extends ListActivity{
 	private TaskDataSource taskData;
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-			
-		taskData = new TaskDataSource(this);
-		list = taskData.selectAll();
 		
-        TasksArrayAdapter adapter = new TasksArrayAdapter(this, list);
-        setListAdapter(adapter);
+		try{
+			taskData = new TaskDataSource(this);
+			list = taskData.selectAll();
+		
+        	TasksArrayAdapter adapter = new TasksArrayAdapter(this, list);
+        	setListAdapter(adapter);
+		}
+		catch (NullPointerException e) {
+			Log.e("error", "NullPointerException");
+			
+			Toast toast = Toast.makeText(this, "Ó âàñ ùå íå ìàº ïîâ³äîìëåíü", Toast.LENGTH_LONG);;
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
+		}
 	}
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		
@@ -49,7 +59,7 @@ public class TasksActivity extends ListActivity{
 			
 		}
 		else{
-			Toast toast = Toast.makeText(this, "�������� ��� ���������", Toast.LENGTH_SHORT);;
+			Toast toast = Toast.makeText(this, "Çàâäàííÿ âæå ïðî÷èòàíå", Toast.LENGTH_SHORT);;
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}

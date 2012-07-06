@@ -11,6 +11,8 @@ import com.taskmanager.database.entities.Task;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -21,11 +23,12 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class NewTaskActivity extends Activity implements OnClickListener{
 	
 	private EditText taskEdit;
-	private String[] priority = {"�������", "�������", "�������"};
+	private String[] priority = {"ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ", "ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ", "ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ"};
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -44,7 +47,7 @@ public class NewTaskActivity extends Activity implements OnClickListener{
         Spinner spinner = (Spinner) findViewById(R.id.spinner1);
 		spinner.setAdapter(adapter);
 		
-		//���� �������� �����������
+		//ï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 		    public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -65,20 +68,27 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 
 		//Select all of task 
 		TaskDataSource taskData = new TaskDataSource(this);
-		list = taskData.getTask(login);
 		
-        TasksArrayAdapter adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
+		try{
+			list = taskData.getTask(login);
+        	TasksArrayAdapter adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
        
-        ListView listView = (ListView) findViewById(R.id.taskslist);
-		listView.setAdapter(adapterTask);
-   
+        	ListView listView = (ListView) findViewById(R.id.taskslist);
+			listView.setAdapter(adapterTask);
+		}catch (NullPointerException e) {
+			Log.e("error", "NullPointerException");
+			
+			Toast toast = Toast.makeText(this, "Ó âàñ ùå íå ìàº ïîâ³äîìëåíü", Toast.LENGTH_LONG);;
+			toast.setGravity(Gravity.CENTER, 0, 0);
+			toast.show();
+		}
 	}
 
 	public void onClick(View v) {
 		switch (v.getId()) {
 	
 		case R.id.send:
-			//��� �� ���� ����� ��� �������� �����������
+			//ï¿œï¿œï¿œ ï¿œï¿œ ï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ
 			break;
 		}
 	}

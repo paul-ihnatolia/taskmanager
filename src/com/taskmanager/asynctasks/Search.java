@@ -1,29 +1,23 @@
 package com.taskmanager.asynctasks;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import com.taskmanager.database.entities.User;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.taskmanager.database.entities.User;
+import com.taskmanager.helpers.HttpConnection;
+
 public class Search extends AsyncTask<String, String, ArrayList<User>> {
 	
 	private ProgressDialog pleaseWait;
+	private static String URL = "/protected/find_user";
 	
 	public Search(ProgressDialog pleaseWait) {
 		super();
@@ -33,48 +27,11 @@ public class Search extends AsyncTask<String, String, ArrayList<User>> {
 	@Override
 	protected ArrayList<User> doInBackground(String... params) {
 		
-		String authToken = params[0];
-		String serchValue = params[1];
-		String url = "http://task-manager-project.heroku.com/protected/find_user";
-		HttpPost request = new HttpPost(url);
-		JSONObject holder = new JSONObject();
-		JSONObject client = new JSONObject();
-		
-		try{
-			
-			client.put("auth_token", authToken);
-			client.put("search_value", serchValue);
-			holder.put("taskmanager", client);
-			StringEntity se = new StringEntity(holder.toString());
-			request.setEntity(se);
-			request.setHeader("Accept", "taskmanager/json");
-			request.setHeader("Content-Type", "taskmanager/json");
-			Log.i("client", holder.toString());
-			
-		}catch (UnsupportedEncodingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		ResponseHandler<String> rhandler = new BasicResponseHandler();
-		HttpClient httpClient = new DefaultHttpClient();
-		
-		String responseBody = null;
-		
-		try {
-			responseBody = httpClient.execute(request, rhandler);
-		} catch (ClientProtocolException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		ArrayList<User> results = parseResponse(responseBody);
+		HashMap<String, String> requestParams = new HashMap<String, String>();
+		requestParams.put("auth_token", params[0]);
+		requestParams.put("search_value", params[1]);
+		String response = HttpConnection.makeRequest(URL, requestParams);
+		ArrayList<User> results = parseResponse(response);
 		return results;
 		
 	}
