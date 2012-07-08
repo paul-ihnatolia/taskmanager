@@ -31,15 +31,15 @@ public class MainMenuActivity extends TabActivity {
         Intent intent;
         
         //(Test)Create database
-        database();
+        //database();
         
-        intent = new Intent().setClass(this, NewFriendActivity.class);
+        intent = new Intent().setClass(MainMenuActivity.this, NewFriendActivity.class);
         spec = tabHost.newTabSpec("newfriend").setIndicator("������ �������",
                           res.getDrawable(R.drawable.ic_tab_newfriend))
                       .setContent(intent);
         tabHost.addTab(spec);
         
-        intent = new Intent().setClass(this, ContactsActivity.class);
+     /*   intent = new Intent().setClass(this, ContactsActivity.class);
         spec = tabHost.newTabSpec("contacts").setIndicator("��������",
                           res.getDrawable(R.drawable.ic_tab_contacts))
                       .setContent(intent);
@@ -49,7 +49,7 @@ public class MainMenuActivity extends TabActivity {
         spec = tabHost.newTabSpec("tasks").setIndicator("��������",
                           res.getDrawable(R.drawable.ic_tab_message))
                       .setContent(intent);
-        tabHost.addTab(spec);
+        tabHost.addTab(spec); */
           
         tabHost.setCurrentTab(0);
 	}

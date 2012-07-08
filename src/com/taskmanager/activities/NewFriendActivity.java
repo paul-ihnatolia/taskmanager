@@ -26,12 +26,14 @@ import android.widget.Toast;
 public class NewFriendActivity extends ListActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		//setContentView(R.layout.newfriend);
 		Button search = (Button) findViewById(R.id.searchbutton);
-	
-		search.setOnClickListener(new OnClickListener() {
+		if(search == null)
+			Log.i("newfriend activity","why?");
+	/*	search.setOnClickListener(new OnClickListener() {
 			
-			public void onClick(View v) {
+			public void onClick(View v){}
+		/*	public void onClick(View v) {
 				
 				String searchItem = ((EditText) findViewById(R.id.serchfield)).getText().toString();
 				String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
@@ -59,12 +61,15 @@ public class NewFriendActivity extends ListActivity {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
+				}catch (Exception e) {
+					Log.e("new friend","some exception");
 				}
-			}
-		});
+			} 
+		}); */
 	}
+	
 	private List<Map<String, String>> createContactsList(ArrayList<User> results) {	
-		
+	
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 		
 		for (User i : results) {
@@ -76,7 +81,9 @@ public class NewFriendActivity extends ListActivity {
 		}
 		return items;
 	}
-	public void onListItemClick(ListView parent, View v, int position, long id) {
+	
+/*	public void onListItemClick(ListView parent, View v, int position, long id) {
 		  
-	}
+	}*/
+	
 }

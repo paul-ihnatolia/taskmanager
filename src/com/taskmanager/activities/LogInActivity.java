@@ -2,6 +2,7 @@ package com.taskmanager.activities;
 
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.concurrent.ExecutionException;
 
@@ -22,7 +23,6 @@ import com.taskmanager.asynctasks.LoginConnection;
 import com.taskmanager.database.dao.TaskDataSource;
 import com.taskmanager.database.dao.UserDataSource;
 import com.taskmanager.database.entities.User;
-import com.taskmanager.service.UpdaterService;
 
 public class LogInActivity extends Activity implements OnClickListener {
     
@@ -72,8 +72,6 @@ public class LogInActivity extends Activity implements OnClickListener {
 	}
 
 	private void doLogin() {
-		
-		// TODO Auto-generated method stub
 		EditText loginF = (EditText) findViewById(R.id.loginET);
 		EditText passwordF = (EditText) findViewById(R.id.passwordET);
 		ProgressDialog pg = new ProgressDialog(LogInActivity.this);
@@ -92,7 +90,7 @@ public class LogInActivity extends Activity implements OnClickListener {
 				editor.putString("auth_token", results.get("auth_token").toString());
 				editor.commit();				
 				
-				User [] friends = (User []) results.get("friends");
+				ArrayList<User> friends = (ArrayList<User>) results.get("friends");
 				
 				//open database
 				UserDataSource.open();
@@ -103,9 +101,9 @@ public class LogInActivity extends Activity implements OnClickListener {
 				TaskDataSource.deleteAll();
 				
 				if(friends != null){
-					for (int j = 0; j < friends.length; j++) {
-						UserDataSource.insert(friends[j]);
-					}			
+					for (User user : friends) {
+						UserDataSource.insert(user);
+					}
 				}
 				
 				startActivity(new Intent(LogInActivity.this, MainMenuActivity.class));

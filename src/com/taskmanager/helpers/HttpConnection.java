@@ -16,8 +16,11 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class HttpConnection {
 	
+	private static final String TAG = HttpConnection.class.getSimpleName();
 	private static String BASE_URL = "http://task-manager-project.heroku.com";
 
 	public static String makeRequest(String url,HashMap<String, String> params){
@@ -67,8 +70,27 @@ public class HttpConnection {
 			return jsonResponse;
 	}
 	
-	public static Map<String, Object> name() {
+	public static HashMap<String, Object> name(String json, String  name, String ... keys) {
 		HashMap<String, Object> results = new HashMap<String, Object>();
+		if(json!=null){
+			try {
+				JSONObject main = new JSONObject(json).getJSONObject(name);
+				String error = main.getString("error");
+				results.put("error", error);
+				if(error.equals("Success")){
+					for (int i = 0; i < keys.length; i++) {
+						results.put(keys[i], main.get(keys[i]));
+					}					
+				}
+			} catch (JSONException e) {
+				Log.e(TAG, "Json exception");
+				e.printStackTrace();
+			}
+			
+		}else{
+			results.put("error", "Server error");
+			Log.e(TAG, "Json is null ");
+		}		
 		return results;
 	}
 }

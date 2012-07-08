@@ -1,5 +1,6 @@
 package com.taskmanager.asynctasks;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.json.JSONArray;
@@ -61,14 +62,14 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Objec
 				if(attributeError.equals("Success")){
 					String attributeToken = sessionObject.getString("auth_token");
 					JSONArray friendsJson = sessionObject.getJSONArray("friends");
-					User [] friends = null;
+					ArrayList<User> friends = new ArrayList<User>();
 					for (int i = 0; i < friendsJson.length(); i++) {
 						JSONObject friend = friendsJson.getJSONObject(i);
 						String login = friend.getString("login");
 						String firstName = friend.getString("firstname");
 						String lastName = friend.getString("lastname");
 						User u = new User(firstName, lastName, login);
-						friends[i] = u;
+						friends.add(u);
 					}		
 					sessionTokens.put("auth_token", attributeToken);
 					sessionTokens.put("friends", friends);
