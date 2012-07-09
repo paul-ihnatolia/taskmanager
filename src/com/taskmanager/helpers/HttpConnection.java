@@ -23,7 +23,7 @@ public class HttpConnection {
 	private static final String TAG = HttpConnection.class.getSimpleName();
 	private static String BASE_URL = "http://task-manager-project.heroku.com";
 
-	public static String makeRequest(String url,HashMap<String, String> params){
+	public static String makeRequest(String url,HashMap<String, Object> params){
 		
 		HttpPost request = new HttpPost(BASE_URL+url);
 		JSONObject holder = new JSONObject();
@@ -42,7 +42,7 @@ public class HttpConnection {
 				request.setEntity(se);
 				request.setHeader("Accept", "taskmanager/json");
 				request.setHeader("Content-Type", "taskmanager/json");
-				//Log.i("client", holder.toString());
+				Log.i("http_connection", holder.toString());
 				
 			}catch (UnsupportedEncodingException e1) {
 				// TODO Auto-generated catch block
@@ -70,11 +70,11 @@ public class HttpConnection {
 			return jsonResponse;
 	}
 	
-	public static HashMap<String, Object> name(String json, String  name, String ... keys) {
+	public static HashMap<String, Object> parse (String json, String  basic, String ... keys) {
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		if(json!=null){
 			try {
-				JSONObject main = new JSONObject(json).getJSONObject(name);
+				JSONObject main = new JSONObject(json).getJSONObject(basic);
 				String error = main.getString("error");
 				results.put("error", error);
 				if(error.equals("Success")){

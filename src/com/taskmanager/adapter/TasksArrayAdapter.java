@@ -6,7 +6,11 @@ import com.taskmanager.R;
 import com.taskmanager.database.entities.Task;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +21,7 @@ import android.widget.TextView;
 public class TasksArrayAdapter extends ArrayAdapter<Task>{
 	private final List<Task> list;
     private final Activity context;
+    final int DIALOG_ADD_FRIEND = 1;
 	
 	public TasksArrayAdapter(Activity context, int textViewResourceId,
 			List<Task> list) {
@@ -45,6 +50,7 @@ public class TasksArrayAdapter extends ArrayAdapter<Task>{
 		int blue = Color.parseColor("#34b6e4");
 		int red = Color.parseColor("#ff4444");
 		int white = Color.parseColor("#ffffff");
+		int orange = Color.parseColor("#ffbb33");
 		int proirityColor = -1;
 		ViewHolder holder;
 		View rowView = convertView;
@@ -70,12 +76,26 @@ public class TasksArrayAdapter extends ArrayAdapter<Task>{
 		holder.contentTextView.setText(list.get(position).getContent());
 		holder.dataTextView.setText(list.get(position).getTime());
 		
-		if (list.get(position).getPriority() == 1)
-        	proirityColor = red;
-	    else if (list.get(position).getPriority() == 2) 
-	    	proirityColor = blue;
-	    else 
-	    	proirityColor = green;
+	
+
+		switch (list.get(position).getPriority()) {
+		case 1:
+			proirityColor = red;
+			break;
+		case 2:
+			proirityColor = blue;
+			break;
+		case 3:
+			proirityColor = green;
+			break;
+		case 4:
+			proirityColor = orange;
+			break;
+		case 5:
+			proirityColor = orange;
+			break;	
+		}
+		
 		holder.priorityLayuot.setBackgroundColor(proirityColor);
 		
 		if(list.get(position).getComplete().equals("false"))
@@ -85,5 +105,6 @@ public class TasksArrayAdapter extends ArrayAdapter<Task>{
         
         return rowView;
 	}
+
 
 }

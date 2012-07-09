@@ -23,16 +23,16 @@ public class SendTask extends AsyncTask<String, String, String> {
 		String auth_token = arg0[0];
 		String receiver_login = arg0[1];
 		String content = arg0[2];
-		String priority = arg0[3];
+		Integer priority = Integer.parseInt(arg0[3]);
 		
-		HashMap<String, String> params = new HashMap<String, String>();
+		HashMap<String, Object> params = new HashMap<String, Object>();
 		params.put("auth_token", auth_token);
 		params.put("receiver_login", receiver_login);
 		params.put("content", content);
 		params.put("priority", priority);
 		
 		String response = HttpConnection.makeRequest(URL, params);
-		HashMap<String, Object> results = HttpConnection.name(response, "new_task", "error");
+		HashMap<String, Object> results = HttpConnection.parse(response, "new_task", "error");
 		return (String) results.get("error");
 	}
 

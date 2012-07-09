@@ -3,12 +3,17 @@ package com.taskmanager.service;
 import java.util.HashMap;
 
 import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.taskmanager.activities.TasksActivity;
+import com.taskmanager.database.dao.TaskDataSource;
+import com.taskmanager.database.entities.Task;
 import com.taskmanager.helpers.HttpConnection;
 
 public class UpdaterService extends Service {
@@ -16,6 +21,7 @@ public class UpdaterService extends Service {
 	private static final String TAG = UpdaterService.class.getSimpleName();
 	private Updater updater;
 	public boolean isRunning = false;
+	private HashMap<String, Object> requestParams;
 	
 	@Override
 	public void onCreate() {
@@ -23,6 +29,14 @@ public class UpdaterService extends Service {
 		Log.d(TAG, "onCreated'd");
 		updater = new Updater();
 		super.onCreate();
+		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+		if(authToken==null){
+			Log.e(TAG, "Token error");
+			this.stopSelf();
+		}else{
+			requestParams = new HashMap<String, Object>();
+			requestParams.put("auth_token", authToken);
+		}	
 	}
 
 	@Override
@@ -65,8 +79,8 @@ public class UpdaterService extends Service {
 			while (true) {
 				// TODO Auto-generated method stub
 				super.run();
-				checkForNewTask();
-				//checkForNewFriendRequests();
+				Log.d(TAG, "Service is running!");
+			//	checkForNewTask();
 				try {
 					Thread.sleep(DELAY);
 				} catch (InterruptedException e) {
@@ -77,31 +91,36 @@ public class UpdaterService extends Service {
 		}
 		
 		private void checkForNewTask() {
-			String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
-			if(authToken==null){
-				Log.e(TAG, "Token error");
-			}else{
-				HashMap<String, String> requestParams = new HashMap<String, String>();
-				requestParams.put("auth_token", authToken);
-				String response = HttpConnection.makeRequest(URL, requestParams);
-				parseResponse(response);
-			}
+			String response = HttpConnection.makeRequest(URL, requestParams);
+			parseResponse(response);
 		}
 
 		private void parseResponse(String responseJsone) {
-			HashMap<String, Object> response = HttpConnection.name(responseJsone, "get_task", "quantity","tasks");
+			HashMap<String, Object> response = HttpConnection.parse(responseJsone, "get_task", "quantity","tasks");
 			if(response.get("error").equals("Success")){
-				if(!response.get("quantity").equals("0")){
-					JSONArray tasksJson = (JSONArray) response.get("tasks");
-					parseTasks();
+				if(Integer.parseInt(response.get("quantity").toString())!=0){
+				
+					try{
+						
+						JSONArray tasksJson = (JSONArray) response.get("tasks");
+						for (int i = 0; i < tasksJson.length(); i++) {					
+							JSONObject task = tasksJson.getJSONObject(i);
+							Integer serverId = task.getInt("id");
+							String content = task.getString("content");
+							Integer priority = task.getInt("priority");
+							String authorLogin = task.getString("user_login");
+							String createdAt = task.getString("created_at");
+							Task t = new Task(priority,authorLogin,createdAt,null,content,"false",serverId.toString());
+							TaskDataSource.insert(t);
+						}
+						
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					sendBroadcast(new Intent("com.taskmanager.TasksActivity"));
 				}
 			}
-		}
-
-		private void parseTasks() {
-			// TODO Auto-generated method stub
-			
-		}
-		
+		}		
 	}
 }

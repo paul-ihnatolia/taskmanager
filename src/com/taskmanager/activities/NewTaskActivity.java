@@ -2,14 +2,20 @@ package com.taskmanager.activities;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import com.taskmanager.R;
 import com.taskmanager.adapter.TasksArrayAdapter;
+import com.taskmanager.asynctasks.SendTask;
 import com.taskmanager.database.dao.TaskDataSource;
 import com.taskmanager.database.entities.Task;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -25,10 +31,13 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class NewTaskActivity extends Activity implements OnClickListener{
+public class NewTaskActivity extends Activity implements OnClickListener {
 	
 	private EditText taskEdit;
-	private String[] priority = {"ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ", "ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ", "ï¿œï¿œï¿œï¿œï¿œï¿œï¿œ"};
+	Context context = this;
+	private String[] priorities = {"low", "average", "high"};
+	private List<Task> list;
+	private int priority;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -40,21 +49,20 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 		sendButton.setOnClickListener(this);
 		taskEdit = (EditText) findViewById(R.id.serchfield);
 		
-		//Create adapter for spinner
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, priority);
+		//Create adapter for spinner 
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, priorities);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		
         Spinner spinner = (Spinner) findViewById(R.id.spinner1);
 		spinner.setAdapter(adapter);
 		
-		//ï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ
 		spinner.setOnItemSelectedListener(new OnItemSelectedListener() {
 		    public void onItemSelected(AdapterView<?> parent, View view,
-					int position, long id) {
-				
-				
+					int position, long id) {	
+		    	priority = position + 1;
 			}
 			public void onNothingSelected(AdapterView<?> arg0) {
+				
 			}
 		});
 		
@@ -63,34 +71,96 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 	    String login = intent.getStringExtra("login");
 	    
 	    text.setText(name + " (" + login + ")");
-	    
-	    List<Task> list = new ArrayList<Task>();
-
-		//Select all of task 
-		TaskDataSource taskData = new TaskDataSource(this);
-		
 		try{
-			list = taskData.getTask(login);
-        	TasksArrayAdapter adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
-       
-        	ListView listView = (ListView) findViewById(R.id.taskslist);
-			listView.setAdapter(adapterTask);
+			createTaskList(login);
 		}catch (NullPointerException e) {
 			Log.e("error", "NullPointerException");
 			
-			Toast toast = Toast.makeText(this, "Ó âàñ ùå íå ìàº ïîâ³äîìëåíü", Toast.LENGTH_LONG);;
+			Toast toast = Toast.makeText(this, "Mo task", Toast.LENGTH_LONG);;
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}
 	}
 
-	public void onClick(View v) {
-		switch (v.getId()) {
-	
-		case R.id.send:
-			//ï¿œï¿œï¿œ ï¿œï¿œ ï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ ï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œï¿œ
-			break;
-		}
+	private void createTaskList(String login){
+		list = new ArrayList<Task>();
+		list = TaskDataSource.getTask(login);
+    	TasksArrayAdapter adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
+   
+    	ListView listView = (ListView) findViewById(R.id.taskslist);
+    	
+    	//
+    	listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+
+			public void onItemClick(AdapterView<?> arg0, View v, int position,
+					long arg3) {
+				
+				int green = Color.parseColor("#99cc00");
+				int blue = Color.parseColor("#34b6e4");
+				int red = Color.parseColor("#ff4444");
+				int orange = Color.parseColor("#ffbb33");
+				int proirityColor = -1;
+				
+				Task task = list.get(position);
+				
+				if(task.getComplete().equals("false")){
+					task.setComplete("true");
+					TaskDataSource.update(task);
+				 	
+					switch (list.get(position).getPriority()) {
+					case 1:
+						proirityColor = red;
+						break;
+					case 2:
+						proirityColor = blue;
+						break;
+					case 3:
+						proirityColor = green;
+						break;
+					case 5:
+						proirityColor = orange;
+						break;	
+					}
+					v.setBackgroundColor(proirityColor);
+					
+				}
+				else{
+					Toast toast = Toast.makeText(context, "The task is made", Toast.LENGTH_LONG);;
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+				}
+			}
+			}
+    	);
+		listView.setAdapter(adapterTask);
 	}
-		
+	
+	//Send task
+	public void onClick(View arg0) {
+		Intent intent = getIntent();
+		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+		String login = intent.getStringExtra("login");
+	    String content = taskEdit.getText().toString();
+	    Integer pri = priority;
+	    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
+	    try {
+			String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
+			String result;
+			if(error.equals("Success")){
+				result = "Task was successfully sended!";
+			}else{
+				result = error;
+			}
+			new AlertDialog.Builder(NewTaskActivity.this).setMessage(result).
+				setNeutralButton("Ok", null).show();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ExecutionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	    
+	}
+
 }

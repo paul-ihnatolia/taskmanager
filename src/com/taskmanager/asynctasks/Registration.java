@@ -41,7 +41,7 @@ public class Registration extends AsyncTask<String, Void, String> {
 	@Override
 	protected String doInBackground(String... arg0) {
 
-		HashMap<String, String> requestParams = new HashMap<String, String>();
+		HashMap<String, Object> requestParams = new HashMap<String, Object>();
 		requestParams.put("firstname", arg0[0]);
 		requestParams.put("lastname", arg0[1]);
 		requestParams.put("login", arg0[2]);

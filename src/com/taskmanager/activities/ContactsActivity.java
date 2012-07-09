@@ -32,6 +32,7 @@ public class ContactsActivity extends ListActivity {
 		            new int[] {android.R.id.text1, android.R.id.text2});
 			
 			setListAdapter(adapter);
+			
 		}
 		catch (NullPointerException e) {
 			Log.e("error", "NullPointerException");

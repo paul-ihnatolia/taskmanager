@@ -3,12 +3,19 @@ package com.taskmanager.database.entities;
 import java.io.Serializable;
 
 public class Task implements Serializable{
-	public Task() {
+	public Task(int priority, String author, String time, String recipient,
+			String content, String complete, String serverId) {
 		super();
-		// TODO Auto-generated constructor stub
+		this.priority = priority;
+		this.author = author;
+		this.time = time;
+		this.recipient = recipient;
+		this.content = content;
+		this.complete = complete;
+		this.serverId = serverId;
 	}
 	public Task(long id, int priority, String author, String time,
-			String recipient, String content, String complete) {
+			String recipient, String content, String complete, String serverId) {
 		super();
 		this.id = id;
 		this.priority = priority;
@@ -17,6 +24,11 @@ public class Task implements Serializable{
 		this.recipient = recipient;
 		this.content = content;
 		this.complete = complete;
+		this.serverId = serverId;
+	}
+	public Task() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	private static final long serialVersionUID = 1L;
 	private long id;
@@ -26,6 +38,7 @@ public class Task implements Serializable{
 	private String recipient;
 	private String content;
 	private String complete;
+	private String serverId;
 	public long getId() {
 		return id;
 	}
@@ -68,8 +81,14 @@ public class Task implements Serializable{
 	public void setComplete(String complete) {
 		this.complete = complete;
 	}
+	public String getServerId() {
+		return serverId;
+	}
+	public void setServerId(String serverId) {
+		this.serverId = serverId;
+	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
-	
+		
 }

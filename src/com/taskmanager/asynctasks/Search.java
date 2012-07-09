@@ -27,7 +27,7 @@ public class Search extends AsyncTask<String, String, HashMap<String,Object>> {
 	@Override
 	protected HashMap<String,Object> doInBackground(String... params) {
 		
-		HashMap<String, String> requestParams = new HashMap<String, String>();
+		HashMap<String, Object> requestParams = new HashMap<String, Object>();
 		requestParams.put("auth_token", params[0]);
 		requestParams.put("search_value", params[1]);
 		String response = HttpConnection.makeRequest(URL, requestParams);

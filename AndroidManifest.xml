@@ -30,6 +30,7 @@
         <activity android:name=".activities.TasksActivity"></activity>
         <activity android:name=".activities.NewFriendActivity"></activity>
         <activity android:name=".activities.NewTaskActivity"></activity>
+        <service android:name=".service.UpdaterService"></service>
         
     </application>
 

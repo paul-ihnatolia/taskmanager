@@ -17,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	final String LOG_TAG = "myLogs";
-	static final int DB_VERSION = 17;
+	static final int DB_VERSION = 18;
 	static final String dbName = "taskManagerDB";
 	static final String userTable = "users";
 	static final String userID = "_id";
@@ -38,11 +38,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	static final String taskRecipient = "recipient";
 	static final String taskContent = "content";
 	static final String taskComplete = "complete";
+	static final String taskServerId = "serverId";
 
 	private static final String DATABASE_CREATE2 = "create table "
 			+ taskTable + "(" + taskID
 			+ " integer primary key autoincrement, " + taskPriority + " INTEGER," + taskAuthor + " TEXT,"   
-			+ taskTime + " TEXT," + taskRecipient + " TEXT,"  + taskContent + " TEXT," + taskComplete + " TEXT);";
+			+ taskTime + " TEXT," + taskRecipient + " TEXT,"  + taskContent + " TEXT," + taskComplete + " TEXT," + taskServerId + " TEXT);";
 		 
 	@Override
 	public void onCreate(SQLiteDatabase db) {

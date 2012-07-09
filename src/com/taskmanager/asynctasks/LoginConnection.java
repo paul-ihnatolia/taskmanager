@@ -37,7 +37,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Objec
 	protected HashMap<String, Object> doInBackground(String... arg0) {
 		// TODO Auto-generated method stub
 		
-		HashMap<String, String> requestParams = new HashMap<String, String>();
+		HashMap<String, Object> requestParams = new HashMap<String, Object>();
 		requestParams.put("login", arg0[0]);
 		requestParams.put("password", arg0[1]);
 		String response = HttpConnection.makeRequest(URL, requestParams);
