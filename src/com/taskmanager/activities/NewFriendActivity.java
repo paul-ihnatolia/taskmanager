@@ -11,6 +11,7 @@ import com.taskmanager.asynctasks.Search;
 import com.taskmanager.database.entities.User;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.util.Log;
@@ -55,30 +56,40 @@ public class NewFriendActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		
 		String searchItem = ((EditText) findViewById(R.id.serchfield)).getText().toString();
-		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
-		ProgressDialog pleaseWait = new ProgressDialog(NewFriendActivity.this);
 		
-		try {
-			HashMap<String, Object> results = new Search(pleaseWait).execute(authToken,searchItem).get();
-			if(!results.get("error").equals("Success")){
-				Log.e("error", results.get("error").toString());
-			}else{
+		if(searchItem.length()<2) {
+			((EditText)findViewById(R.id.serchfield)).setError("Request must contain at least 2 characters");
+		}else {
+			
+			String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+			ProgressDialog pleaseWait = new ProgressDialog(NewFriendActivity.this);
+			
+			try {
+			
+				HashMap<String, Object> results = new Search(pleaseWait).execute(authToken,searchItem).get();
+				ArrayList<User> users = new ArrayList<User>();
 				
-				ArrayList<User> users = (ArrayList<User>) results.get("users");
+				if(!results.get("error").equals("Success")){
+					new AlertDialog.Builder(this).setTitle("Sorry").setMessage(results.get("error").toString()).
+						setNeutralButton("Ok", null).show();
+				}else{				
+					users.addAll((ArrayList<User>) results.get("users"));				
+				}
+				
 				SimpleAdapter adapter = new SimpleAdapter(NewFriendActivity.this, createContactsList(users), android.R.layout.simple_list_item_2,
 						new String[] {"name", "login"},
 						new int[] {android.R.id.text1, android.R.id.text2});
 				
 				frendList.setAdapter(adapter);
-				
+	
+	
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				e.printStackTrace();
+			}catch (Exception e) {
+				Log.e("new friend","some exception");
 			}
-
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			e.printStackTrace();
-		}catch (Exception e) {
-			Log.e("new friend","some exception");
 		}
 	}
 }
