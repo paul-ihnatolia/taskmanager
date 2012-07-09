@@ -26,6 +26,7 @@ public class ContactsActivity extends ListActivity {
 		super.onCreate(savedInstanceState);
 		
 		try{
+			
 			SimpleAdapter adapter = new SimpleAdapter(this, createContactsList(), android.R.layout.simple_list_item_2, 
 		            new String[] {"name", "login"}, 
 		            new int[] {android.R.id.text1, android.R.id.text2});
@@ -60,8 +61,7 @@ public class ContactsActivity extends ListActivity {
 	}
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		String name = createContactsList().get(position).get("name");
-		String login = createContactsList().get(position).get("login");
-		
+		String login = createContactsList().get(position).get("login");		
 		Intent intent = new Intent(this, NewTaskActivity.class); 
 	    intent.putExtra("name", name);
 	    intent.putExtra("login", login);

@@ -14,7 +14,7 @@ import android.util.Log;
 import com.taskmanager.database.entities.User;
 import com.taskmanager.helpers.HttpConnection;
 
-public class Search extends AsyncTask<String, String, ArrayList<User>> {
+public class Search extends AsyncTask<String, String, HashMap<String,Object>> {
 	
 	private ProgressDialog pleaseWait;
 	private static String URL = "/protected/find_user";
@@ -25,52 +25,51 @@ public class Search extends AsyncTask<String, String, ArrayList<User>> {
 	}
 	
 	@Override
-	protected ArrayList<User> doInBackground(String... params) {
+	protected HashMap<String,Object> doInBackground(String... params) {
 		
 		HashMap<String, String> requestParams = new HashMap<String, String>();
 		requestParams.put("auth_token", params[0]);
 		requestParams.put("search_value", params[1]);
 		String response = HttpConnection.makeRequest(URL, requestParams);
-		ArrayList<User> results = parseResponse(response);
+		HashMap<String, Object> results = parseResponse(response);
 		return results;
 		
 	}
 
-	private ArrayList<User> parseResponse(String responseBody) {
-		ArrayList<User> results = null;
+	private HashMap<String, Object> parseResponse(String responseBody) {
+		
+		HashMap<String, Object> results = new HashMap<String, Object>();
+		ArrayList<User> users = null;
 		if(responseBody!=null){
 			try {
 				JSONObject jobject = new JSONObject(responseBody).getJSONObject("find_user");
-				if(jobject.getString("error").equals("Success")){
-					JSONArray resultsJson = jobject.getJSONArray("users");
-					results = new ArrayList<User>();
-					for (int i = 0; i < resultsJson.length(); i++) {
-						JSONObject friend = resultsJson.getJSONObject(i);
+				results.put("error",jobject.getString("error"));
+				if(results.get("error").equals("Success")){
+					JSONArray usersJson = jobject.getJSONArray("users");
+					users = new ArrayList<User>();
+					for (int i = 0; i < usersJson.length(); i++) {
+						JSONObject friend = usersJson.getJSONObject(i);
 						String login = friend.getString("login");
 						String firstName = friend.getString("firstname");
 						String lastName = friend.getString("lastname");
 						User u = new User(firstName, lastName, login);
-						results.add(u);
+						users.add(u);
 					}	
-					
-				}else{
-					
+					results.put("users", users);
 				}
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}else{
-			
-		}
-		
+			Log.e("search", "json is null");
+		}	
 		Log.i("Search", responseBody.toString());
-		
 		return results;
 	}
 
 	@Override
-	protected void onPostExecute(ArrayList<User> results) {
+	protected void onPostExecute(HashMap<String,Object> results) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(results);
 		pleaseWait.dismiss();

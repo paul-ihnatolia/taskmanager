@@ -79,7 +79,8 @@ public class HttpConnection {
 				results.put("error", error);
 				if(error.equals("Success")){
 					for (int i = 0; i < keys.length; i++) {
-						results.put(keys[i], main.get(keys[i]));
+						if(main.has(keys[i]))
+						 results.put(keys[i], main.get(keys[i]));
 					}					
 				}
 			} catch (JSONException e) {
