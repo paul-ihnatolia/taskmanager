@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.taskmanager.activities.TasksActivity;
 import com.taskmanager.database.dao.TaskDataSource;
 import com.taskmanager.database.dao.UserDataSource;
 import com.taskmanager.database.entities.Task;
@@ -19,43 +18,45 @@ import com.taskmanager.database.entities.User;
 import com.taskmanager.helpers.HttpConnection;
 
 public class UpdaterService extends Service {
-	
+
 	private static final String TAG = UpdaterService.class.getSimpleName();
 	private Updater updater;
 	public boolean isRunning = false;
 	private static HashMap<String, Object> requestParams;
-	TaskDataSource taskdatabase; 
+	TaskDataSource taskdatabase;
 	UserDataSource userDataSource;
 	private String authToken;
 	private String login;
-	
+
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onCreated'd");
 		updater = new Updater();
 		super.onCreate();
-		authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+		authToken = getSharedPreferences("CurrentUser", 0).getString(
+				"auth_token", null);
 		login = getSharedPreferences("CurrentUser", 0).getString("login", null);
 		taskdatabase = new TaskDataSource(this);
-		if(authToken==null){
+		userDataSource = new UserDataSource(this);
+		if (authToken == null) {
 			Log.e(TAG, "Token error");
 			this.stopSelf();
-		}else{
+		} else {
 			requestParams = new HashMap<String, Object>();
 			requestParams.put("auth_token", authToken);
-		}	
+		}
 	}
 
 	@Override
 	public synchronized void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if(isRunning){
+		if (isRunning) {
 			updater.stop();
-			this.isRunning=false;
+			this.isRunning = false;
 		}
-		
+
 		Log.d(TAG, "onDestroy'd");
 	}
 
@@ -63,12 +64,12 @@ public class UpdaterService extends Service {
 	public synchronized void onStart(Intent intent, int startId) {
 		// TODO Auto-generated method stub
 		super.onStart(intent, startId);
-		
-		if(!isRunning){
+
+		if (!isRunning) {
 			updater.start();
-			this.isRunning=true;
+			this.isRunning = true;
 		}
-		
+
 		Log.d(TAG, "onStart'd");
 	}
 
@@ -77,11 +78,12 @@ public class UpdaterService extends Service {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
-	//Update thread
+
+	// Update thread
 	class Updater extends Thread {
 		private static final long DELAY = 30000;
 		private static final String URL = "/protected/get_task";
+
 		@Override
 		public void run() {
 			while (true) {
@@ -97,7 +99,7 @@ public class UpdaterService extends Service {
 				}
 			}
 		}
-		
+
 		private void checkForNewTask() {
 			Log.i(TAG, requestParams.toString());
 			requestParams.put("auth_token", authToken);
@@ -107,30 +109,33 @@ public class UpdaterService extends Service {
 
 		private void parseResponse(String responseJsone) {
 			Log.i(TAG, responseJsone);
-			HashMap<String, Object> response = HttpConnection.parse(responseJsone, "get_task", "quantity","tasks");
-			if(response.get("error").equals("Success")){
-				if(Integer.parseInt(response.get("quantity").toString())!=0){
-				
-					try{
+			HashMap<String, Object> response = HttpConnection.parse(
+					responseJsone, "get_task", "quantity", "tasks");
+			if (response.get("error").equals("Success")) {
+				if (Integer.parseInt(response.get("quantity").toString()) != 0) {
+
+					try {
 						taskdatabase.open();
 						JSONArray tasksJson = (JSONArray) response.get("tasks");
-						for (int i = 0; i < tasksJson.length(); i++) {					
+						for (int i = 0; i < tasksJson.length(); i++) {
 							JSONObject task = tasksJson.getJSONObject(i);
 							Integer serverId = task.getInt("id");
 							String content = task.getString("content");
 							String authorLogin = task.getString("user_login");
 							Integer priority = task.getInt("priority");
-							
-							if(priority == 5)
-								content=saveNewFriend(content,authorLogin);
-							
+
+							if (priority == 5)
+								content = saveNewFriend(content, authorLogin);
+
 							String createdAt = task.getString("created_at");
-							Task t = new Task(priority,authorLogin,createdAt,login,content,"false",serverId);
+							Task t = new Task(priority, authorLogin, createdAt,
+									login, content, "false", serverId);
 							taskdatabase.insert(t);
 						}
-						
+
 						taskdatabase.close();
-						sendBroadcast(new Intent("com.taskmanager.TasksActivity"));
+						sendBroadcast(new Intent(
+								"com.taskmanager.TasksActivity"));
 						Log.i(TAG, "parsing");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
@@ -140,23 +145,24 @@ public class UpdaterService extends Service {
 			}
 		}
 
-		private String saveNewFriend(String content,String login) {
-			String [] contentArray = content.split("");
+		private String saveNewFriend(String content, String login) {
+			String[] contentArray = content.split(" ");
 			String firstname = contentArray[0];
 			String lastname = contentArray[1];
-			
-			if(contentArray[2].equals("true")){
 
+			if (contentArray[2].equals("true")) {
 				User user = new User(firstname, lastname, login);
 				userDataSource.open();
 				userDataSource.insert(user);
 				userDataSource.close();
 				content = firstname + lastname + "added you to friend";
 				sendBroadcast(new Intent("com.taskmanager.ContactActivity"));
-			}else{
-				content = firstname + lastname + "didn't add you to friend";
+			} else {
+
+				content = firstname + lastname + " didn't add you to friend";
 			}
+
 			return content;
-		}		
+		}
 	}
 }

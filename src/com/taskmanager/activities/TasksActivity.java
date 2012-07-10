@@ -121,6 +121,7 @@ public class TasksActivity extends ListActivity{
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}
+		
 	}
 	
 	protected Dialog onCreateDialog(int id) {

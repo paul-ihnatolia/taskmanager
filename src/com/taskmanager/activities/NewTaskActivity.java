@@ -78,7 +78,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		}catch (NullPointerException e) {
 			Log.e("error", "NullPointerException");
 			
-			Toast toast = Toast.makeText(this, "Mo task", Toast.LENGTH_LONG);;
+			Toast toast = Toast.makeText(this, "No task", Toast.LENGTH_LONG);;
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}
@@ -155,11 +155,12 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 			String result;
 			if(error.equals("Success")){			
 				taskdatabase.open();
-				Task task = new Task(pri, author, new Date().toString(), login, content, "false", 0);
+				Task task = new Task(pri, author, new Date().toString(), login, content, "true", 0);
 				taskdatabase.insert(task);
 				taskdatabase.close();		
 				result = "Task was successfully sended!";
 				createTaskList(login);
+				taskEdit.getText().clear();
 			}else{
 				result = error;
 			}

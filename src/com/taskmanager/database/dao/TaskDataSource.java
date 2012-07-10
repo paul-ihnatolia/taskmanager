@@ -1,12 +1,15 @@
 package com.taskmanager.database.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.taskmanager.database.entities.Task;
 
@@ -94,7 +97,8 @@ public class TaskDataSource {
 		return taskList;
 	}
 	public static ArrayList<Task> getRecipientAll(String login){
-		ArrayList<Task> taskList = new ArrayList<Task>();
+		ArrayList<Task> vuk = new ArrayList<Task>();
+		ArrayList<Task> neVuk = new ArrayList<Task>();
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskRecipient + " = ?",  new String[] {login}, null, null, null);
 		
 		mCursor.moveToFirst();
@@ -109,19 +113,29 @@ public class TaskDataSource {
 				String time = mCursor.getString(TASK_COLUMN_TIME);
 				String complete = mCursor.getString(TASK_COLUMN_COMPLETE);
 				int serverId = mCursor.getInt(TASK_COLUMN_SERVERID);
-				taskList.add(new Task(id, priority, author, time, recipient, content, complete, serverId));
+				Task task = new Task(id, priority, author, time, 
+						recipient, content, complete, serverId);
+				if(complete.equals("true")){
+					vuk.add(task);
+				}else{
+					neVuk.add(task);
+				}
 				
 			} while (mCursor.moveToNext());
 		}
 		
 		mCursor.close();
-		
-		return taskList;
+		Collections.reverse(neVuk);
+		Collections.reverse(vuk);
+		neVuk.addAll(vuk);
+		Log.i("tds", neVuk.toString());
+		return neVuk;
 	}
 	public static ArrayList<Task> selectAll() {
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, null, null, null, null, null);
 		 
-		ArrayList<Task> arr = new ArrayList<Task>();
+		ArrayList<Task> vuk = new ArrayList<Task>();
+		ArrayList<Task> neVuk = new ArrayList<Task>();
 		mCursor.moveToFirst();
 		if (!mCursor.isAfterLast()) {	
 			do {
@@ -133,12 +147,20 @@ public class TaskDataSource {
 				String time = mCursor.getString(TASK_COLUMN_TIME);
 				String complete = mCursor.getString(TASK_COLUMN_COMPLETE);
 				int serverId = mCursor.getInt(TASK_COLUMN_SERVERID);
-				arr.add(new Task(id, priority, author, time, recipient, content, complete, serverId));
+				Task task = new Task(id, priority, author, time, 
+						recipient, content, complete, serverId);
+				if(complete.equals("true")){
+					vuk.add(task);
+				}else{
+					neVuk.add(task);
+				}
 				
 			} while (mCursor.moveToNext());
 		}
 		mCursor.close();
-		return arr;
+		neVuk.addAll(vuk);
+		Log.i("tds", neVuk.toString());
+		return neVuk;
 	}
 	
 	public static ArrayList<Task> getAuthorAndRecipient(String login){
