@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Task implements Serializable{
 	public Task(int priority, String author, String time, String recipient,
-			String content, String complete, String serverId) {
+			String content, String complete, int serverId) {
 		super();
 		this.priority = priority;
 		this.author = author;
@@ -15,7 +15,7 @@ public class Task implements Serializable{
 		this.serverId = serverId;
 	}
 	public Task(long id, int priority, String author, String time,
-			String recipient, String content, String complete, String serverId) {
+			String recipient, String content, String complete, int serverId) {
 		super();
 		this.id = id;
 		this.priority = priority;
@@ -38,7 +38,7 @@ public class Task implements Serializable{
 	private String recipient;
 	private String content;
 	private String complete;
-	private String serverId;
+	private int serverId;
 	public long getId() {
 		return id;
 	}
@@ -81,10 +81,10 @@ public class Task implements Serializable{
 	public void setComplete(String complete) {
 		this.complete = complete;
 	}
-	public String getServerId() {
+	public int getServerId() {
 		return serverId;
 	}
-	public void setServerId(String serverId) {
+	public void setServerId(int serverId) {
 		this.serverId = serverId;
 	}
 	public static long getSerialversionuid() {

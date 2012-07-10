@@ -5,6 +5,7 @@ import com.taskmanager.database.dao.TaskDataSource;
 import com.taskmanager.database.dao.UserDataSource;
 import com.taskmanager.database.entities.Task;
 import com.taskmanager.database.entities.User;
+import com.taskmanager.service.UpdaterService;
 
 import android.app.TabActivity;
 import android.content.Intent;
@@ -33,9 +34,6 @@ public class MainMenuActivity extends TabActivity {
         TabHost.TabSpec spec;  
         Intent intent;
         
-        //(Test)Create database
-        //database();
-        
         intent = new Intent().setClass(this, TasksActivity.class);
         spec = tabHost.newTabSpec("tasks").setIndicator("Tasks",
                           res.getDrawable(R.drawable.ic_tab_message))
@@ -56,7 +54,7 @@ public class MainMenuActivity extends TabActivity {
           
         tabHost.setCurrentTab(0);
         
-     // startService(new Intent(this,UpdaterService.class));
+        startService(new Intent(this,UpdaterService.class));
         
 
 	}
@@ -72,13 +70,13 @@ public class MainMenuActivity extends TabActivity {
 	    
 		switch (item.getItemId()) {
 		case IDM_CLOSE:
-			SharedPreferences.Editor editor= getSharedPreferences("CurrentUser", 0).edit();
-			editor.clear();
-			editor.commit();
+
 			finish();
 			break;
 		case IDM_EXIT:
-			
+			SharedPreferences.Editor editor= getSharedPreferences("CurrentUser", 0).edit();
+			editor.clear();
+			editor.commit();
 			break;
 		}
 	    return super.onOptionsItemSelected(item);

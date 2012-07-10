@@ -84,7 +84,7 @@ public class TaskDataSource {
 				String recipient = mCursor.getString(TASK_COLUMN_RECIPIENT);
 				String time = mCursor.getString(TASK_COLUMN_TIME);
 				String complete = mCursor.getString(TASK_COLUMN_COMPLETE);
-				String serverId = mCursor.getString(TASK_COLUMN_SERVERID);
+				int serverId = mCursor.getInt(TASK_COLUMN_SERVERID);
 				taskList.add(new Task(id, priority, author, time, recipient, content, complete, serverId));
 				
 			} while (mCursor.moveToNext());
@@ -107,7 +107,7 @@ public class TaskDataSource {
 				String recipient = mCursor.getString(TASK_COLUMN_RECIPIENT);
 				String time = mCursor.getString(TASK_COLUMN_TIME);
 				String complete = mCursor.getString(TASK_COLUMN_COMPLETE);
-				String serverId = mCursor.getString(TASK_COLUMN_SERVERID);
+				int serverId = mCursor.getInt(TASK_COLUMN_SERVERID);
 				arr.add(new Task(id, priority, author, time, recipient, content, complete, serverId));
 				
 			} while (mCursor.moveToNext());

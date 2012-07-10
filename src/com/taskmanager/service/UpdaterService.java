@@ -110,7 +110,7 @@ public class UpdaterService extends Service {
 							Integer priority = task.getInt("priority");
 							String authorLogin = task.getString("user_login");
 							String createdAt = task.getString("created_at");
-							Task t = new Task(priority,authorLogin,createdAt,null,content,"false",serverId.toString());
+							Task t = new Task(priority,authorLogin,createdAt,null,content,"false",serverId);
 							TaskDataSource.insert(t);
 						}
 						
