@@ -31,7 +31,6 @@ public class UpdaterService extends Service {
 		super.onCreate();
 		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
 		taskdatabase = new TaskDataSource(this);
-		taskdatabase.open();
 		if(authToken==null){
 			Log.e(TAG, "Token error");
 			this.stopSelf();
@@ -104,7 +103,7 @@ public class UpdaterService extends Service {
 				if(Integer.parseInt(response.get("quantity").toString())!=0){
 				
 					try{
-					//	taskdatabase.open();
+						taskdatabase.open();
 						JSONArray tasksJson = (JSONArray) response.get("tasks");
 						for (int i = 0; i < tasksJson.length(); i++) {					
 							JSONObject task = tasksJson.getJSONObject(i);
@@ -116,7 +115,7 @@ public class UpdaterService extends Service {
 							Task t = new Task(priority,authorLogin,createdAt,null,content,"false",serverId);
 							taskdatabase.insert(t);
 						}
-						//taskdatabase.close();
+						taskdatabase.close();
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

@@ -28,11 +28,11 @@ public class TasksActivity extends ListActivity{
 	final int DIALOG_ADD_FRIEND = 1;
 	private List<Task> list;
 	private BroadcastReceiver receiver;
-	
+	TaskDataSource taskdatabase;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+		taskdatabase = new TaskDataSource(this);
 		IntentFilter intentFilter = new IntentFilter(
                 "com.taskmanager.TasksActivity");
 		  receiver = new BroadcastReceiver() {
@@ -42,7 +42,7 @@ public class TasksActivity extends ListActivity{
 			public void onReceive(Context context, Intent intent) {
 				
 				Log.i("broadcastreceiver_at task_activity", "Received");
-				
+				createTaskList();
 			}
 		};
 		Log.i("taskactivity","receiver is created");
@@ -60,7 +60,9 @@ public class TasksActivity extends ListActivity{
 	}
 	
 	private void createTaskList(){
-		list = TaskDataSource.selectAll();
+		taskdatabase.open();
+		list = taskdatabase.selectAll();
+		taskdatabase.close();
     	TasksArrayAdapter adapter = new TasksArrayAdapter(this, list);
     	setListAdapter(adapter);
 	}

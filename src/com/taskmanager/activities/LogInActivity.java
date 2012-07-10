@@ -112,8 +112,8 @@ public class LogInActivity extends Activity implements OnClickListener {
 					}
 				}
 				
-			/*	userdatabase.close();
-				taskdatabase.close();*/
+				userdatabase.close();
+				taskdatabase.close();
 				
 				startActivity(new Intent(LogInActivity.this, MainMenuActivity.class));
 				

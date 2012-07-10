@@ -100,6 +100,7 @@ public class MainMenuActivity extends TabActivity {
 				SharedPreferences.Editor editor = s.edit();
 				editor.clear();
 				editor.commit();
+				stopService(new Intent(this,UpdaterService.class));
 				result = "Successfull logout";
 			}else{
 				result = error;
