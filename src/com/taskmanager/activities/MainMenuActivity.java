@@ -102,6 +102,8 @@ public class MainMenuActivity extends TabActivity {
 					editor.clear();
 					editor.commit();
 					stopService(new Intent(this,UpdaterService.class));
+					System.runFinalizersOnExit(true);
+					System.exit(0);
 					result = "Successfull logout";
 				}else{
 					result = error;
