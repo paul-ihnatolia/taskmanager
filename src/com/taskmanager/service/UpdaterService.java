@@ -13,7 +13,9 @@ import android.util.Log;
 
 import com.taskmanager.activities.TasksActivity;
 import com.taskmanager.database.dao.TaskDataSource;
+import com.taskmanager.database.dao.UserDataSource;
 import com.taskmanager.database.entities.Task;
+import com.taskmanager.database.entities.User;
 import com.taskmanager.helpers.HttpConnection;
 
 public class UpdaterService extends Service {
@@ -23,6 +25,7 @@ public class UpdaterService extends Service {
 	public boolean isRunning = false;
 	private static HashMap<String, Object> requestParams;
 	TaskDataSource taskdatabase; 
+	UserDataSource userDataSource;
 	private String authToken;
 	private String login;
 	
@@ -115,8 +118,12 @@ public class UpdaterService extends Service {
 							JSONObject task = tasksJson.getJSONObject(i);
 							Integer serverId = task.getInt("id");
 							String content = task.getString("content");
-							Integer priority = task.getInt("priority");
 							String authorLogin = task.getString("user_login");
+							Integer priority = task.getInt("priority");
+							
+							if(priority == 5)
+								content=saveNewFriend(content,authorLogin);
+							
 							String createdAt = task.getString("created_at");
 							Task t = new Task(priority,authorLogin,createdAt,login,content,"false",serverId);
 							taskdatabase.insert(t);
@@ -131,6 +138,25 @@ public class UpdaterService extends Service {
 					}
 				}
 			}
+		}
+
+		private String saveNewFriend(String content,String login) {
+			String [] contentArray = content.split("");
+			String firstname = contentArray[0];
+			String lastname = contentArray[1];
+			
+			if(contentArray[2].equals("true")){
+
+				User user = new User(firstname, lastname, login);
+				userDataSource.open();
+				userDataSource.insert(user);
+				userDataSource.close();
+				content = firstname + lastname + "added you to friend";
+				sendBroadcast(new Intent("com.taskmanager.ContactActivity"));
+			}else{
+				content = firstname + lastname + "didn't add you to friend";
+			}
+			return content;
 		}		
 	}
 }

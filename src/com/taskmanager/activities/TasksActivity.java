@@ -36,7 +36,8 @@ public class TasksActivity extends ListActivity{
 	private BroadcastReceiver receiver;
 	TaskDataSource taskdatabase;
 	private int positionUser;
-	UserDataSource userdatabase ;
+	UserDataSource userdatabase;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		taskdatabase = new TaskDataSource(this);
@@ -141,6 +142,7 @@ public class TasksActivity extends ListActivity{
 						User user = new User(firstName,lastName,login);
 						userdatabase.insert(user);
 						userdatabase.close();
+						sendBroadcast(new Intent("com.taskmanager.ContactActivity"));
 					}
 					new AlertDialog.Builder(TasksActivity.this).setTitle("Result").setMessage(results.get("error").toString()).
 						setNeutralButton("Ok", null).show();
@@ -156,8 +158,10 @@ public class TasksActivity extends ListActivity{
 
 	    	return adb.create();
 	    }
+		
 		return super.onCreateDialog(id);
 	}
+	
 	  private HashMap<String, Object> friendship(String button){
 			ProgressDialog pg = new ProgressDialog(TasksActivity.this);
 			String auth_token = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);

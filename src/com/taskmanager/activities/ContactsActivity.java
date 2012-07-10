@@ -10,7 +10,10 @@ import com.taskmanager.database.dao.UserDataSource;
 import com.taskmanager.database.entities.User;
 
 import android.app.ListActivity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -21,13 +24,30 @@ import android.widget.Toast;
 
 public class ContactsActivity extends ListActivity {
 	UserDataSource userdatabase = new UserDataSource(this);
+	private BroadcastReceiver receiver;
+	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
+		IntentFilter intentFilter = new IntentFilter(
+                "com.taskmanager.ContactActivity");
+		  receiver = new BroadcastReceiver() {
+			  
+			 
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				
+				Log.i("broadcastreceiver_at_contact_activity", "Received");
+				createContactsList();
+			}
+		};
+		
+		this.registerReceiver(receiver, intentFilter);
+
+		
 		try{
 			createContactsList();
-		}
-		catch (NullPointerException e) {
+		}catch (NullPointerException e) {
 			Log.e("error", "NullPointerException");
 			
 			Toast toast = Toast.makeText(this, "No contact", Toast.LENGTH_LONG);
