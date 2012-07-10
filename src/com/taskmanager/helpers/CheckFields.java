@@ -62,8 +62,8 @@ public class CheckFields {
             	 return type + " is too short!";
              else if (password.length() > max) 
             	 return type + " length is more than 15 characters";
-             if(!password.matches(regexLogin))
-            	 return type + " consists invalid characters";
+     /*        if(!password.matches(regexLogin))
+            	 return type + " consists invalid characters";*/
         }
 		
         return null;

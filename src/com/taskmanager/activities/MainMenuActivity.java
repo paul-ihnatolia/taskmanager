@@ -1,12 +1,17 @@
 package com.taskmanager.activities;
 
+import java.util.concurrent.ExecutionException;
+
 import com.taskmanager.R;
+import com.taskmanager.asynctasks.LogOut;
 import com.taskmanager.database.dao.TaskDataSource;
 import com.taskmanager.database.dao.UserDataSource;
 import com.taskmanager.database.entities.Task;
 import com.taskmanager.database.entities.User;
 import com.taskmanager.service.UpdaterService;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.app.TabActivity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -74,12 +79,39 @@ public class MainMenuActivity extends TabActivity {
 			finish();
 			break;
 		case IDM_EXIT:
-			SharedPreferences.Editor editor= getSharedPreferences("CurrentUser", 0).edit();
-			editor.clear();
-			editor.commit();
+			
+			SharedPreferences s = getSharedPreferences("CurrentUser", 0);
+			String auth_token = s.getString("auth_token", null);
+			ProgressDialog pleaseWait = new ProgressDialog(MainMenuActivity.this);
+			
+			String error=null;
+			
+			try {
+				error = new LogOut(pleaseWait).execute(auth_token).get();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			String result;
+			if(error.equals("Success")){
+				SharedPreferences.Editor editor = s.edit();
+				editor.clear();
+				editor.commit();
+				result = "Successfull logout";
+			}else{
+				result = error;
+			}
+			new AlertDialog.Builder(this).setTitle("Result").setMessage(result).
+				setNeutralButton("Ok", null).show();
+			finish();
 			break;
 		}
+		
 	    return super.onOptionsItemSelected(item);
+	    
 	}
         
 }

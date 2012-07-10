@@ -71,6 +71,7 @@ public class HttpConnection {
 	}
 	
 	public static HashMap<String, Object> parse (String json, String  basic, String ... keys) {
+		Log.i("parsing json", json);
 		HashMap<String, Object> results = new HashMap<String, Object>();
 		if(json!=null){
 			try {

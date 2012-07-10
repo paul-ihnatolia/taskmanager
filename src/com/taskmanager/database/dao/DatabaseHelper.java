@@ -17,7 +17,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 	}
 	
 	final String LOG_TAG = "myLogs";
-	static final int DB_VERSION = 19;
+	static final int DB_VERSION = 21;
 	static final String dbName = "taskManagerDB";
 	static final String userTable = "users";
 	static final String userID = "_id";

@@ -22,7 +22,7 @@ public class UpdaterService extends Service {
 	private Updater updater;
 	public boolean isRunning = false;
 	private HashMap<String, Object> requestParams;
-	
+	TaskDataSource taskdatabase; 
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
@@ -30,6 +30,8 @@ public class UpdaterService extends Service {
 		updater = new Updater();
 		super.onCreate();
 		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+		taskdatabase = new TaskDataSource(this);
+		taskdatabase.open();
 		if(authToken==null){
 			Log.e(TAG, "Token error");
 			this.stopSelf();
@@ -80,7 +82,7 @@ public class UpdaterService extends Service {
 				// TODO Auto-generated method stub
 				super.run();
 				Log.d(TAG, "Service is running!");
-			//	checkForNewTask();
+				checkForNewTask();
 				try {
 					Thread.sleep(DELAY);
 				} catch (InterruptedException e) {
@@ -96,12 +98,13 @@ public class UpdaterService extends Service {
 		}
 
 		private void parseResponse(String responseJsone) {
+			Log.i(TAG, responseJsone);
 			HashMap<String, Object> response = HttpConnection.parse(responseJsone, "get_task", "quantity","tasks");
 			if(response.get("error").equals("Success")){
 				if(Integer.parseInt(response.get("quantity").toString())!=0){
 				
 					try{
-						
+					//	taskdatabase.open();
 						JSONArray tasksJson = (JSONArray) response.get("tasks");
 						for (int i = 0; i < tasksJson.length(); i++) {					
 							JSONObject task = tasksJson.getJSONObject(i);
@@ -111,14 +114,15 @@ public class UpdaterService extends Service {
 							String authorLogin = task.getString("user_login");
 							String createdAt = task.getString("created_at");
 							Task t = new Task(priority,authorLogin,createdAt,null,content,"false",serverId);
-							TaskDataSource.insert(t);
+							taskdatabase.insert(t);
 						}
-						
+						//taskdatabase.close();
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					sendBroadcast(new Intent("com.taskmanager.TasksActivity"));
+					Log.i(TAG, "parsing");
 				}
 			}
 		}		

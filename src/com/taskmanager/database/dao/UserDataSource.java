@@ -31,11 +31,11 @@ public class UserDataSource {
 		dbHelper = new DatabaseHelper(context);
 	}
 
-	public static void open() throws SQLException {
+	public void open() throws SQLException {
 		db = dbHelper.getWritableDatabase();
 	}
 
-	public static void close() {
+	public void close() {
 		dbHelper.close();
 	}
 	
@@ -44,14 +44,14 @@ public class UserDataSource {
 		db.execSQL(sql);
 	}
 	
-	public static long insert(User user) {
+	public long insert(User user) {
 		ContentValues cv = new ContentValues();
 		cv.put("firstname", user.getFirstname());
 		cv.put("lastname", user.getLastname());
 		cv.put(DatabaseHelper.userLogin, user.getLogin());
 		return db.insert("users", null, cv);
 	}
-	public static int  update(User user) {
+	public int  update(User user) {
 		ContentValues cv=new ContentValues();
 		
 		cv.put(DatabaseHelper.userFirstname, user.getFirstname());
@@ -60,11 +60,11 @@ public class UserDataSource {
 		return db.update(DatabaseHelper.userTable, cv, DatabaseHelper.userID + " = ?", new String[] {String.valueOf(user.getId()) });
 	}
 	
-	public static int deleteAll() {
+	public int deleteAll() {
 		return db.delete(DatabaseHelper.userTable, null, null);
 	}
 	
-	public static void delete(long id) {
+	public void delete(long id) {
 		db.delete(DatabaseHelper.userTable, DatabaseHelper.userID + " = ?", new String[] { String.valueOf(id) });
 	}
 	
@@ -117,7 +117,7 @@ public class UserDataSource {
 	    return db.query(DatabaseHelper.userTable, null, null, null, null, null, null);
 	}
 
-	public static Cursor getTaskData(String login) {
+	public  Cursor getTaskData(String login) {
 	    return db.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskAuthor+ " = "
 	        + login, null, null, null, null);
 	}

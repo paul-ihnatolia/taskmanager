@@ -50,7 +50,8 @@ public class LogInActivity extends Activity implements OnClickListener {
 	
 	private boolean checkToken() {
 		Log.i("checktoken", "checktoken");
-		return sPreferences.contains("auth_token");
+		return sPreferences.contains("auth_token") && 
+				sPreferences.getString("auth_token", null)!=null;
 	}
 	
 	public void onClick(View v) {
@@ -88,23 +89,31 @@ public class LogInActivity extends Activity implements OnClickListener {
 				Log.i("loginisation", "Successfull loginisation!");
 				SharedPreferences.Editor editor = sPreferences.edit();
 				editor.putString("auth_token", results.get("auth_token").toString());
+				editor.putString("login", login);
 				editor.commit();				
 				
 				ArrayList<User> friends = (ArrayList<User>) results.get("friends");
 				
+				
 				//open database
-				UserDataSource.open();
-				TaskDataSource.deleteAll();
-
+				UserDataSource userdatabase = new UserDataSource(this);
+				TaskDataSource taskdatabase = new TaskDataSource(this);
+				/*UserDataSource.open();
+				TaskDataSource.open();*/
+				userdatabase.open();
+				taskdatabase.open();
 				//delete existing tables
-				UserDataSource.deleteAll();
-				TaskDataSource.deleteAll();
+				userdatabase.deleteAll();
+				taskdatabase.deleteAll();
 				
 				if(friends != null){
 					for (User user : friends) {
-						UserDataSource.insert(user);
+						userdatabase.insert(user);
 					}
 				}
+				
+			/*	userdatabase.close();
+				taskdatabase.close();*/
 				
 				startActivity(new Intent(LogInActivity.this, MainMenuActivity.class));
 				
