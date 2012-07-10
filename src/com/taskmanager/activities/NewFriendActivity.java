@@ -119,9 +119,10 @@ public class NewFriendActivity extends Activity implements OnClickListener{
 				public void onClick(DialogInterface dialog, int which) {
 					String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
 					ProgressDialog pg = new ProgressDialog(NewFriendActivity.this);
+			
 					try {
 						String error = new SendRequestForFriendship(pg).execute("request", authToken, 
-								users.get(positionUser).getLogin()).get();
+								users.get(positionUser).getLogin()).get().get("error").toString();
 						String result;
 						if(error.equals("Success")){
 							result = "Request was successfully sended!";
@@ -130,6 +131,7 @@ public class NewFriendActivity extends Activity implements OnClickListener{
 						}
 						new AlertDialog.Builder(NewFriendActivity.this).setMessage(result).
 							setNeutralButton("Ok", null).show();
+						
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -140,9 +142,11 @@ public class NewFriendActivity extends Activity implements OnClickListener{
 				}
 				
 			});
+	        
 	        adb.setNegativeButton("No", new DialogInterface.OnClickListener() {
 				
 				public void onClick(DialogInterface dialog, int which) {
+					
 					dialog.cancel();
 					
 				}

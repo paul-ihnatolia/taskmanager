@@ -6,6 +6,7 @@ import com.taskmanager.helpers.HttpConnection;
 
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.util.Log;
 
 public class SendTask extends AsyncTask<String, String, String> {
 	
@@ -33,6 +34,7 @@ public class SendTask extends AsyncTask<String, String, String> {
 		
 		String response = HttpConnection.makeRequest(URL, params);
 		HashMap<String, Object> results = HttpConnection.parse(response, "new_task", "error");
+		Log.i("sendtask", response.toString());
 		return (String) results.get("error");
 	}
 

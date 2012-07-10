@@ -9,7 +9,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 public class SendRequestForFriendship extends
-		AsyncTask<String, String, String> {
+		AsyncTask<String, String, HashMap<String, Object>> {
 	
 	
 	private final String URL = "/protected/add_friend";
@@ -21,7 +21,7 @@ public class SendRequestForFriendship extends
 	}
 
 	@Override
-	protected String doInBackground(String... params) {
+	protected HashMap<String, Object> doInBackground(String... params) {
 		
 		HashMap<String, Object> requestParams = new HashMap<String, Object>();
 		int priority;
@@ -41,12 +41,12 @@ public class SendRequestForFriendship extends
 		
 		String responseJson = HttpConnection.makeRequest(URL, requestParams);
 	//	Log.e("SendRequestForFriendship", msg)
-		return HttpConnection.parse(responseJson, "add_friend", "error").get("error").toString();
+		return HttpConnection.parse(responseJson, "add_friend", "firstname","lastname","login");
 		
 	}
 
 	@Override
-	protected void onPostExecute(String result) {
+	protected void onPostExecute(HashMap<String, Object> result) {
 		// TODO Auto-generated method stub
 		super.onPostExecute(result);
 		pleaseWait.dismiss();

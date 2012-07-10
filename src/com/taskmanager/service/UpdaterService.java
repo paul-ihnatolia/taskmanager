@@ -21,15 +21,19 @@ public class UpdaterService extends Service {
 	private static final String TAG = UpdaterService.class.getSimpleName();
 	private Updater updater;
 	public boolean isRunning = false;
-	private HashMap<String, Object> requestParams;
+	private static HashMap<String, Object> requestParams;
 	TaskDataSource taskdatabase; 
+	private String authToken;
+	private String login;
+	
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onCreated'd");
 		updater = new Updater();
 		super.onCreate();
-		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+		authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+		login = getSharedPreferences("CurrentUser", 0).getString("login", null);
 		taskdatabase = new TaskDataSource(this);
 		if(authToken==null){
 			Log.e(TAG, "Token error");
@@ -92,6 +96,8 @@ public class UpdaterService extends Service {
 		}
 		
 		private void checkForNewTask() {
+			Log.i(TAG, requestParams.toString());
+			requestParams.put("auth_token", authToken);
 			String response = HttpConnection.makeRequest(URL, requestParams);
 			parseResponse(response);
 		}
@@ -112,16 +118,17 @@ public class UpdaterService extends Service {
 							Integer priority = task.getInt("priority");
 							String authorLogin = task.getString("user_login");
 							String createdAt = task.getString("created_at");
-							Task t = new Task(priority,authorLogin,createdAt,null,content,"false",serverId);
+							Task t = new Task(priority,authorLogin,createdAt,login,content,"false",serverId);
 							taskdatabase.insert(t);
 						}
+						
 						taskdatabase.close();
+						sendBroadcast(new Intent("com.taskmanager.TasksActivity"));
+						Log.i(TAG, "parsing");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					sendBroadcast(new Intent("com.taskmanager.TasksActivity"));
-					Log.i(TAG, "parsing");
 				}
 			}
 		}		

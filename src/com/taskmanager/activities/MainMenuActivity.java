@@ -79,36 +79,38 @@ public class MainMenuActivity extends TabActivity {
 			finish();
 			break;
 		case IDM_EXIT:
-			
-			SharedPreferences s = getSharedPreferences("CurrentUser", 0);
-			String auth_token = s.getString("auth_token", null);
-			ProgressDialog pleaseWait = new ProgressDialog(MainMenuActivity.this);
-			
-			String error=null;
-			
-			try {
-				error = new LogOut(pleaseWait).execute(auth_token).get();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (ExecutionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			String result;
-			if(error.equals("Success")){
-				SharedPreferences.Editor editor = s.edit();
-				editor.clear();
-				editor.commit();
-				stopService(new Intent(this,UpdaterService.class));
-				result = "Successfull logout";
-			}else{
-				result = error;
-			}
-			new AlertDialog.Builder(this).setTitle("Result").setMessage(result).
-				setNeutralButton("Ok", null).show();
-			finish();
-			break;
+			{
+				SharedPreferences s = getSharedPreferences("CurrentUser", 0);
+				String auth_token = s.getString("auth_token", null);
+				ProgressDialog pleaseWait = new ProgressDialog(MainMenuActivity.this);
+				
+				String error=null;
+				
+				try {
+					error = new LogOut(pleaseWait).execute(auth_token).get();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				String result;
+				if(error.equals("Success")){
+					SharedPreferences.Editor editor = s.edit();
+					editor.clear();
+					editor.commit();
+					stopService(new Intent(this,UpdaterService.class));
+					result = "Successfull logout";
+				}else{
+					result = error;
+				}
+				new AlertDialog.Builder(this).setTitle("Result").setMessage(result).
+					setNeutralButton("Ok", null).show();
+				finish(); 
+				break;
+			}	
 		}
 		
 	    return super.onOptionsItemSelected(item);

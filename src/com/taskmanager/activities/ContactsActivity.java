@@ -19,35 +19,28 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
 
-
-
 public class ContactsActivity extends ListActivity {
+	UserDataSource userdatabase = new UserDataSource(this);
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
 		try{
-			
-			SimpleAdapter adapter = new SimpleAdapter(this, createContactsList(), android.R.layout.simple_list_item_2, 
-		            new String[] {"name", "login"}, 
-		            new int[] {android.R.id.text1, android.R.id.text2});
-			
-			setListAdapter(adapter);
-			
+			createContactsList();
 		}
 		catch (NullPointerException e) {
 			Log.e("error", "NullPointerException");
 			
-			Toast toast = Toast.makeText(this, "Ó âàñ ùå íå ìàº êîíòàêò³â", Toast.LENGTH_LONG);
+			Toast toast = Toast.makeText(this, "No contact", Toast.LENGTH_LONG);
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}
 	}
-
 	private List<Map<String, String>> createContactsList() {
 		
 		//Select all of task
-		UserDataSource userData = new UserDataSource(this);
-		ArrayList<User> contacts = userData.selectAll();
+		userdatabase.open();
+		ArrayList<User> contacts = userdatabase.selectAll();
+		userdatabase.close();
 		
 		List<Map<String, String>> items = new ArrayList<Map<String, String>>();
 		
@@ -58,6 +51,12 @@ public class ContactsActivity extends ListActivity {
 			
 			items.add(map);
 		}
+		SimpleAdapter adapter = new SimpleAdapter(this, items, android.R.layout.simple_list_item_2, 
+	            new String[] {"name", "login"}, 
+	            new int[] {android.R.id.text1, android.R.id.text2});
+		
+		setListAdapter(adapter);
+		
 		return items;
 	}
 	public void onListItemClick(ListView parent, View v, int position, long id) {

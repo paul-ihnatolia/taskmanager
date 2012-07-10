@@ -93,6 +93,31 @@ public class TaskDataSource {
 		
 		return taskList;
 	}
+	public static ArrayList<Task> getRecipientAll(String login){
+		ArrayList<Task> taskList = new ArrayList<Task>();
+		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskRecipient + " = ?",  new String[] {login}, null, null, null);
+		
+		mCursor.moveToFirst();
+		
+		if (!mCursor.isAfterLast()) {	
+			do {
+				long id = mCursor.getLong(TASK_COLUMN_ID);
+				String author = mCursor.getString(TASK_COLUMN_AUTHOR); 
+				String content = mCursor.getString(TASK_COLUMN_CONTENT);
+				int priority = mCursor.getInt(TASK_COLUMN_PRIORITY); 
+				String recipient = mCursor.getString(TASK_COLUMN_RECIPIENT);
+				String time = mCursor.getString(TASK_COLUMN_TIME);
+				String complete = mCursor.getString(TASK_COLUMN_COMPLETE);
+				int serverId = mCursor.getInt(TASK_COLUMN_SERVERID);
+				taskList.add(new Task(id, priority, author, time, recipient, content, complete, serverId));
+				
+			} while (mCursor.moveToNext());
+		}
+		
+		mCursor.close();
+		
+		return taskList;
+	}
 	public static ArrayList<Task> selectAll() {
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, null, null, null, null, null);
 		 
@@ -114,6 +139,31 @@ public class TaskDataSource {
 		}
 		mCursor.close();
 		return arr;
-	}	  
+	}
+	
+	public static ArrayList<Task> getAuthorAndRecipient(String login){
+			  ArrayList<Task> taskList = new ArrayList<Task>();
+			  Cursor mCursor = db.query(DatabaseHelper.taskTable, null,DatabaseHelper.taskAuthor + " = ?" + " OR " + DatabaseHelper.taskRecipient + " = ?",  new String[] {login, login}, null, null, null);
+			  
+			  mCursor.moveToFirst();
+			  
+			  if (!mCursor.isAfterLast()) { 
+				  do {
+					    long id = mCursor.getLong(TASK_COLUMN_ID);
+					    String author = mCursor.getString(TASK_COLUMN_AUTHOR); 
+					    String content = mCursor.getString(TASK_COLUMN_CONTENT);
+					    int priority = mCursor.getInt(TASK_COLUMN_PRIORITY); 
+					    String recipient = mCursor.getString(TASK_COLUMN_RECIPIENT);
+					    String time = mCursor.getString(TASK_COLUMN_TIME);
+					    String complete = mCursor.getString(TASK_COLUMN_COMPLETE);
+					    int serverId = mCursor.getInt(TASK_COLUMN_SERVERID);
+					    taskList.add(new Task(id, priority, author, time, recipient, content, complete, serverId));
+				    
+				  } while (mCursor.moveToNext());
+			  }
+			  mCursor.close();
+			  
+			  return taskList;
+		 }
 
 }

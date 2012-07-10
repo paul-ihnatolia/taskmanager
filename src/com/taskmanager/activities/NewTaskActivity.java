@@ -1,6 +1,7 @@
 package com.taskmanager.activities;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -38,6 +39,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	private String[] priorities = {"low", "average", "high"};
 	private List<Task> list;
 	private int priority;
+	TaskDataSource taskdatabase;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -47,7 +49,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		TextView text = (TextView) findViewById(R.id.name);
 		Button sendButton = (Button) findViewById(R.id.send);
 		sendButton.setOnClickListener(this);
-		taskEdit = (EditText) findViewById(R.id.serchfield);
+		taskEdit = (EditText) findViewById(R.id.content);
 		
 		//Create adapter for spinner 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, priorities);
@@ -84,7 +86,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 
 	private void createTaskList(String login){
 		list = new ArrayList<Task>();
-		list = TaskDataSource.getTask(login);
+		taskdatabase.open();
+		list = taskdatabase.getAuthorAndRecipient(login);
+		taskdatabase.close();
     	TasksArrayAdapter adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
    
     	ListView listView = (ListView) findViewById(R.id.taskslist);
@@ -105,7 +109,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 				
 				if(task.getComplete().equals("false")){
 					task.setComplete("true");
-					TaskDataSource.update(task);
+					taskdatabase.open();
+					taskdatabase.update(task);
+				 	taskdatabase.close();
 				 	
 					switch (list.get(position).getPriority()) {
 					case 1:
@@ -142,12 +148,18 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		String login = intent.getStringExtra("login");
 	    String content = taskEdit.getText().toString();
 	    Integer pri = priority;
+	    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
 	    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
 	    try {
 			String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
 			String result;
-			if(error.equals("Success")){
+			if(error.equals("Success")){			
+				taskdatabase.open();
+				Task task = new Task(pri, author, new Date().toString(), login, content, "false", 0);
+				taskdatabase.insert(task);
+				taskdatabase.close();		
 				result = "Task was successfully sended!";
+				createTaskList(login);
 			}else{
 				result = error;
 			}
