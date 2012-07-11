@@ -32,11 +32,14 @@ import com.taskmanager.database.entities.User;
 public class TasksActivity extends ListActivity{
 	
 	final int DIALOG_ADD_FRIEND = 1;
+	final int DIALOG_COMPLETE = 2;
 	private List<Task> list;
 	private BroadcastReceiver receiver;
-	TaskDataSource taskdatabase;
 	private int positionUser;
+	private View taskListView;
+	TaskDataSource taskdatabase;
 	UserDataSource userdatabase;
+	
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,60 +75,34 @@ public class TasksActivity extends ListActivity{
 		taskdatabase.open();
 		String login = getSharedPreferences("CurrentUser", 0).getString("login", null);
 		list = taskdatabase.getRecipientAll(login);
+		list.add(new Task(3,"Vasa","12.12.2012","Hello","Taras","false",1));
 		taskdatabase.close();
+		
     	TasksArrayAdapter adapter = new TasksArrayAdapter(this, list);
     	setListAdapter(adapter);
 	}
 	
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		
-		
 		Task task = list.get(position);
-		int green = Color.parseColor("#99cc00");
-		int blue = Color.parseColor("#34b6e4");
-		int red = Color.parseColor("#ff4444");
-		int orange = Color.parseColor("#ffbb33");
-		int white = Color.parseColor("#ffffff");
-		int proirityColor = -1;
 		
 		if(task.getComplete().equals("false")){
-			task.setComplete("true");
-			taskdatabase.open();
-			taskdatabase.update(task);
-			taskdatabase.close();
-			
-			switch (list.get(position).getPriority()) {
-			case 1:
-				proirityColor = red;
-				break;
-			case 2:
-				proirityColor = blue;
-				break;
-			case 3:
-				proirityColor = green;
-				break;
-			case 4:
-				proirityColor = orange;
-				showDialog(DIALOG_ADD_FRIEND);
-				positionUser=position;
-				break;
-			case 5:
-				proirityColor = orange;
-				break;	
-			}
-			v.setBackgroundColor(proirityColor);
-			
+			positionUser = position;
+			taskListView = v;
+			showDialog(DIALOG_COMPLETE);
 		}
 		else{
 			Toast toast = Toast.makeText(this, "The task is made", Toast.LENGTH_SHORT);;
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}
-		
 	}
 	
 	protected Dialog onCreateDialog(int id) {
-		if (id == DIALOG_ADD_FRIEND) {
+		switch (id) {
+		
+		//a dialogue to add as a friend
+		case DIALOG_ADD_FRIEND:
 			AlertDialog.Builder adb = new AlertDialog.Builder(this);
 	        
 	        adb.setTitle("Add friend");
@@ -158,7 +135,59 @@ public class TasksActivity extends ListActivity{
 	        });
 
 	    	return adb.create();
-	    }
+	    
+	    //Create dialogue for the task
+		case DIALOG_COMPLETE:
+			AlertDialog.Builder adb2 = new AlertDialog.Builder(this);
+	        
+	        adb2.setTitle("Task");
+	        adb2.setMessage("You have completed the task?");
+	      
+	        adb2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					
+					int green = Color.parseColor("#99cc00");
+					int blue = Color.parseColor("#34b6e4");
+					int red = Color.parseColor("#ff4444");
+					int orange = Color.parseColor("#ffbb33");
+					int proirityColor = -1;
+					
+					Task task = list.get(positionUser);
+					task.setComplete("true");
+					taskdatabase.open();
+					taskdatabase.update(task);
+					taskdatabase.close();
+					
+					switch (list.get(positionUser).getPriority()) {
+					case 1:
+						proirityColor = red;
+						break;
+					case 2:
+						proirityColor = blue;
+						break;
+					case 3:
+						proirityColor = green;
+						break;
+					case 4:
+						proirityColor = orange;
+						showDialog(DIALOG_ADD_FRIEND);
+						
+						break;
+					case 5:
+						proirityColor = orange;
+						break;	
+					}
+					taskListView.setBackgroundColor(proirityColor);
+				}
+			});
+	        
+	        adb2.setNegativeButton("No", new DialogInterface.OnClickListener() {
+	   			public void onClick(DialogInterface dialog, int which) {
+	   				dialog.cancel();	
+	   			}
+	   	    });
+	        return adb2.create();
+		}
 		
 		return super.onCreateDialog(id);
 	}
