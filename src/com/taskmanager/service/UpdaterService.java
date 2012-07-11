@@ -104,7 +104,11 @@ public class UpdaterService extends Service {
 			requestParams.put("auth_token", authToken);
 			Log.i(TAG, requestParams.toString());
 			String response = HttpConnection.makeRequest(URL, requestParams);
-			parseResponse(response);
+			if(response != null){
+				parseResponse(response);
+			}else{
+				Log.e(TAG, "Server response is null!");
+			}	
 		}
 
 		private void parseResponse(String responseJsone) {

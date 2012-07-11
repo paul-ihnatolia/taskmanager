@@ -39,31 +39,30 @@ public class Search extends AsyncTask<String, String, HashMap<String,Object>> {
 	private HashMap<String, Object> parseResponse(String responseBody) {
 		
 		HashMap<String, Object> results = new HashMap<String, Object>();
+		results = HttpConnection.parse(responseBody, "find_user", "users");
 		ArrayList<User> users = null;
-		if(responseBody!=null){
-			try {
-				JSONObject jobject = new JSONObject(responseBody).getJSONObject("find_user");
-				results.put("error",jobject.getString("error"));
-				if(results.get("error").equals("Success")){
-					JSONArray usersJson = jobject.getJSONArray("users");
-					users = new ArrayList<User>();
-					for (int i = 0; i < usersJson.length(); i++) {
-						JSONObject friend = usersJson.getJSONObject(i);
-						String login = friend.getString("login");
-						String firstName = friend.getString("firstname");
-						String lastName = friend.getString("lastname");
-						User u = new User(firstName, lastName, login);
-						users.add(u);
-					}	
-					results.put("users", users);
+		
+		if(results.get("error").equals("Success")){
+			JSONArray usersJson = (JSONArray)results.get("users");
+			users = new ArrayList<User>();
+			for (int i = 0; i < usersJson.length(); i++) {
+				JSONObject friend;
+				try {
+					friend = usersJson.getJSONObject(i);
+					String login = friend.getString("login");
+					String firstName = friend.getString("firstname");
+					String lastName = friend.getString("lastname");
+					User u = new User(firstName, lastName, login);
+					users.add(u);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			
 			}
-		}else{
-			Log.e("search", "json is null");
+			results.put("users", users);
 		}	
+	
 		Log.i("Search", responseBody.toString());
 		return results;
 	}
