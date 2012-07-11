@@ -151,9 +151,11 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
 	    try {
 	    	String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
-	    	if(error.equals("Success")){	
+	    	if(error.equals("Success")){
+	    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+	    		
 		    	taskdatabase.open();
-		    	Task task = new Task(pri, author, new Date().toString(), login, content, "true", 0);
+		    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), login, content, "true", 0);
 		    	taskdatabase.insert(task);
 		    	taskdatabase.close();	
 		    	createTaskList(login);
