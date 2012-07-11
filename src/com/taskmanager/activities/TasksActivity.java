@@ -115,7 +115,6 @@ public class TasksActivity extends ListActivity{
 		taskdatabase.open();
 		String login = getSharedPreferences("CurrentUser", 0).getString("login", null);
 		list = taskdatabase.getRecipientAll(login);
-		list.add(new Task(3,"Vasa","12.12.2012","Hello","Taras","false",1));
 		taskdatabase.close();
 		
     	TasksArrayAdapter adapter = new TasksArrayAdapter(this, list);
@@ -125,10 +124,13 @@ public class TasksActivity extends ListActivity{
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		
 		Task task = list.get(position);
-		
-		if(task.getComplete().equals("false")){
+		taskListView = v;
+		if (task.getPriority() == 4 && task.getComplete().equals("false")){
+			showDialog(DIALOG_ADD_FRIEND);
+		}
+		else if(task.getComplete().equals("false")){
 			positionUser = position;
-			taskListView = v;
+			
 			showDialog(DIALOG_COMPLETE);
 		}
 		else{
@@ -161,7 +163,18 @@ public class TasksActivity extends ListActivity{
 						userdatabase.insert(user);
 						userdatabase.close();
 						sendBroadcast(new Intent("com.taskmanager.ContactActivity"));
+						
+						
+						Task task = list.get(positionUser);
+						task.setComplete("true");
+						taskdatabase.open();
+						taskdatabase.update(task);
+						taskdatabase.close();
+						
+						taskListView.setBackgroundColor(Color.parseColor("#ffbb33"));
+						
 					}
+					
 					new AlertDialog.Builder(TasksActivity.this).setTitle("Result").setMessage(results.get("error").toString()).
 						setNeutralButton("Ok", null).show();
 				}
@@ -208,11 +221,6 @@ public class TasksActivity extends ListActivity{
 					case 3:
 						proirityColor = green;
 						break;
-					case 4:
-						proirityColor = orange;
-						showDialog(DIALOG_ADD_FRIEND);
-						
-						break;
 					case 5:
 						proirityColor = orange;
 						break;	
@@ -233,7 +241,6 @@ public class TasksActivity extends ListActivity{
 	}
 	
 	  private HashMap<String, Object> friendship(String button){
-		  
 			ProgressDialog pg = new ProgressDialog(TasksActivity.this);
 			String auth_token = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
 			String login = list.get(positionUser).getAuthor();
@@ -241,7 +248,7 @@ public class TasksActivity extends ListActivity{
 			if(button.equals("Ok")){
 				chi = "true";
 			}else{
-				chi="false";
+				chi = "false";
 			}
 			
 			HashMap<String, Object> results = new HashMap<String, Object>();
