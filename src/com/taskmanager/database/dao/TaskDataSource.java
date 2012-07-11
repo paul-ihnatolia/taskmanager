@@ -1,7 +1,6 @@
 package com.taskmanager.database.dao;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 
 import android.content.ContentValues;
