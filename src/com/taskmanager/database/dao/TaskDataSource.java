@@ -31,20 +31,20 @@ public class TaskDataSource {
 		dbHelper = new DatabaseHelper(context);
 	}
 
-	public static void open() throws SQLException {
+	public void open() throws SQLException {
 		db = dbHelper.getWritableDatabase();
 	}
 
-	public static void close() {
+	public void close() {
 		dbHelper.close();
 	}
 
-	public static void addItem(Task task) {
+	public void addItem(Task task) {
 		String sql = "insert into tasks values('" + task.getId() + "','" +task.getPriority() +"','" + task.getAuthor() +  "','" + task.getTime() +"','" + task.getRecipient() + "','" + task.getContent() +"','" + task.getComplete()+ "','" + task.getServerId() + "');";
 		db.execSQL(sql);
 	}
 
-	public static long insert(Task task) {
+	public long insert(Task task) {
 		ContentValues cv = new ContentValues();
 		cv.put(DatabaseHelper.taskPriority, task.getPriority());
 		cv.put(DatabaseHelper.taskAuthor, task.getAuthor());
@@ -56,7 +56,7 @@ public class TaskDataSource {
 		return db.insert(DatabaseHelper.taskTable, null, cv);
 	}
 	
-	public static int update(Task task) {
+	public int update(Task task) {
 		ContentValues cv=new ContentValues();
 		cv.put(DatabaseHelper.taskPriority, task.getPriority());
 		cv.put(DatabaseHelper.taskAuthor, task.getAuthor());
@@ -68,11 +68,12 @@ public class TaskDataSource {
 		
 		return db.update(DatabaseHelper.taskTable, cv, DatabaseHelper.taskID + " = ?", new String[] {String.valueOf(task.getId()) });
 	}
-	public static int deleteAll() {
+	
+	public int deleteAll() {
 		return db.delete(DatabaseHelper.taskTable, null, null);
 	}
 		
-	public static ArrayList<Task> getTask(String login){
+	public ArrayList<Task> getTask(String login){
 		ArrayList<Task> taskList = new ArrayList<Task>();
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskAuthor + " = ?",  new String[] {login}, null, null, null);
 		
@@ -96,7 +97,7 @@ public class TaskDataSource {
 		
 		return taskList;
 	}
-	public static ArrayList<Task> getRecipientAll(String login){
+	public ArrayList<Task> getRecipientAll(String login){
 		ArrayList<Task> vuk = new ArrayList<Task>();
 		ArrayList<Task> neVuk = new ArrayList<Task>();
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, DatabaseHelper.taskRecipient + " = ?",  new String[] {login}, null, null, null);
@@ -131,7 +132,7 @@ public class TaskDataSource {
 		Log.i("tds", neVuk.toString());
 		return neVuk;
 	}
-	public static ArrayList<Task> selectAll() {
+	public ArrayList<Task> selectAll() {
 		Cursor mCursor = db.query(DatabaseHelper.taskTable, null, null, null, null, null, null);
 		 
 		ArrayList<Task> vuk = new ArrayList<Task>();
@@ -163,7 +164,7 @@ public class TaskDataSource {
 		return neVuk;
 	}
 	
-	public static ArrayList<Task> getAuthorAndRecipient(String login){
+	public ArrayList<Task> getAuthorAndRecipient(String login){
 			  ArrayList<Task> taskList = new ArrayList<Task>();
 			  Cursor mCursor = db.query(DatabaseHelper.taskTable, null,DatabaseHelper.taskAuthor + " = ?" + " OR " + DatabaseHelper.taskRecipient + " = ?",  new String[] {login, login}, null, null, null);
 			  
