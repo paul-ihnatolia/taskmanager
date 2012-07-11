@@ -101,8 +101,8 @@ public class UpdaterService extends Service {
 		}
 
 		private void checkForNewTask() {
-			Log.i(TAG, requestParams.toString());
 			requestParams.put("auth_token", authToken);
+			Log.i(TAG, requestParams.toString());
 			String response = HttpConnection.makeRequest(URL, requestParams);
 			parseResponse(response);
 		}
@@ -142,6 +142,8 @@ public class UpdaterService extends Service {
 						e.printStackTrace();
 					}
 				}
+			}else{
+				Log.e(TAG, response.get("error").toString());
 			}
 		}
 

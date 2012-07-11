@@ -184,7 +184,7 @@ public class TaskDataSource {
 				  } while (mCursor.moveToNext());
 			  }
 			  mCursor.close();
-			  
+			  Collections.reverse(taskList);
 			  return taskList;
 		 }
 

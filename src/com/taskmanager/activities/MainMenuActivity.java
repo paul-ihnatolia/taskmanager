@@ -52,7 +52,7 @@ public class MainMenuActivity extends TabActivity {
         tabHost.addTab(spec);
      
         intent = new Intent().setClass(MainMenuActivity.this, NewFriendActivity.class);
-        spec = tabHost.newTabSpec("newfriend").setIndicator("New friend",
+        spec = tabHost.newTabSpec("newfriend").setIndicator("Add new contact",
                           res.getDrawable(R.drawable.ic_tab_newfriend))
                       .setContent(intent);
         tabHost.addTab(spec);

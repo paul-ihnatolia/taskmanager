@@ -150,7 +150,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	    Integer pri = priority;
 	    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
 	    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
+	    
 	    try {
+	    	
 			String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
 			String result;
 			if(error.equals("Success")){			
@@ -158,14 +160,13 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 				Task task = new Task(pri, author, new Date().toString(), login, content, "true", 0);
 				taskdatabase.insert(task);
 				taskdatabase.close();		
-				result = "Task was successfully sended!";
 				createTaskList(login);
 				taskEdit.getText().clear();
 			}else{
-				result = error;
+				new AlertDialog.Builder(NewTaskActivity.this).setTitle("Error").setMessage(error).
+					setNeutralButton("Ok", null).show();
 			}
-			new AlertDialog.Builder(NewTaskActivity.this).setMessage(result).
-				setNeutralButton("Ok", null).show();
+			
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
