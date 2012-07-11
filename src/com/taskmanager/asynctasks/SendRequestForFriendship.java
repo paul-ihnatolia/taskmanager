@@ -40,7 +40,6 @@ public class SendRequestForFriendship extends
 		requestParams.put("priority", priority);
 		
 		String responseJson = HttpConnection.makeRequest(URL, requestParams);
-	//	Log.e("SendRequestForFriendship", msg)
 		return HttpConnection.parse(responseJson, "add_friend", "firstname","lastname","login");
 		
 	}

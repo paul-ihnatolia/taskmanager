@@ -2,7 +2,6 @@ package com.taskmanager.helpers;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -73,9 +72,10 @@ public class HttpConnection {
 	}
 	
 	public static HashMap<String, Object> parse (String json, String  basic, String ... keys) {
-		Log.i("parsing json", json);
+		
 		HashMap<String, Object> results = new HashMap<String, Object>();
-		if(json!=null){
+		if(json!=null&&!json.equals("")){
+			Log.i("parsing json", json);
 			try {
 				JSONObject main = new JSONObject(json).getJSONObject(basic);
 				String error = main.getString("error");
@@ -92,7 +92,7 @@ public class HttpConnection {
 			}
 			
 		}else{
-			results.put("error", "Server error");
+			results.put("error", "Server error. Please check your internet connection");
 			Log.e(TAG, "Json is null ");
 		}		
 		return results;

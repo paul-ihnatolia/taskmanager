@@ -43,6 +43,7 @@ public class Search extends AsyncTask<String, String, HashMap<String,Object>> {
 		ArrayList<User> users = null;
 		
 		if(results.get("error").equals("Success")){
+			Log.i("Search", responseBody.toString());
 			JSONArray usersJson = (JSONArray)results.get("users");
 			users = new ArrayList<User>();
 			for (int i = 0; i < usersJson.length(); i++) {
@@ -62,8 +63,6 @@ public class Search extends AsyncTask<String, String, HashMap<String,Object>> {
 			}
 			results.put("users", users);
 		}	
-	
-		Log.i("Search", responseBody.toString());
 		return results;
 	}
 

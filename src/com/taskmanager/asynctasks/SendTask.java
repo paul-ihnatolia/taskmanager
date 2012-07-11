@@ -34,13 +34,12 @@ public class SendTask extends AsyncTask<String, String, String> {
 		
 		String response = HttpConnection.makeRequest(URL, params);
 		HashMap<String, Object> results = HttpConnection.parse(response, "new_task", "error");
-		Log.i("sendtask", response.toString());
 		return (String) results.get("error");
 	}
 
 	@Override
 	protected void onPostExecute(String result) {
-		// TODO Auto-generated method stub
+
 		super.onPostExecute(result);
 		pleaseWait.dismiss();
 	}

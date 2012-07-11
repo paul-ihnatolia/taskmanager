@@ -52,6 +52,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Objec
 		result = HttpConnection.parse(jsonResponse, "login", "auth_token","friends");
 
 		if(result.get("error").equals("Success")){
+			Log.i("parsetoken",result.toString());
 			JSONArray friendsJson = (JSONArray) result.get("friends");
 			ArrayList<User> friends = new ArrayList<User>();
 			for (int i = 0; i < friendsJson.length(); i++) {
@@ -72,7 +73,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Objec
 		}	
 
 		
-		Log.i("parsetoken",result.toString());
+		
 		return result;	
 	
 	}
