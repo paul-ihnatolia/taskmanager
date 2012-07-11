@@ -48,47 +48,32 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Objec
 
 	private HashMap<String, Object> parseToken(String jsonResponse) {
 		
-		HashMap<String, Object> sessionTokens = new HashMap<String, Object>();
-		if(jsonResponse != null) {
-		JSONObject jObject;
-		
-		try {
-				Log.i("serverresponse1", jsonResponse);
-				
-				jObject = new JSONObject(jsonResponse);
-				JSONObject sessionObject = jObject.getJSONObject("login");
-				String attributeError = sessionObject.getString("error");
-				sessionTokens.put("error", attributeError);
-				if(attributeError.equals("Success")){
-					String attributeToken = sessionObject.getString("auth_token");
-					JSONArray friendsJson = sessionObject.getJSONArray("friends");
-					ArrayList<User> friends = new ArrayList<User>();
-					for (int i = 0; i < friendsJson.length(); i++) {
-						JSONObject friend = friendsJson.getJSONObject(i);
-						String login = friend.getString("login");
-						String firstName = friend.getString("firstname");
-						String lastName = friend.getString("lastname");
-						User u = new User(firstName, lastName, login);
-						friends.add(u);
-					}		
-					sessionTokens.put("auth_token", attributeToken);
-					sessionTokens.put("friends", friends);
-				}	
-				
-			} catch (JSONException e) {
-				
-				Log.e("jsonexInLoginConnection","jsonExceptionInLoginConnection");
-				e.printStackTrace();
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		result = HttpConnection.parse(jsonResponse, "login", "auth_token","friends");
+
+		if(result.get("error").equals("Success")){
+			JSONArray friendsJson = (JSONArray) result.get("friends");
+			ArrayList<User> friends = new ArrayList<User>();
+			for (int i = 0; i < friendsJson.length(); i++) {
+				JSONObject friend;
+				try {
+					friend = friendsJson.getJSONObject(i);
+					String login = friend.getString("login");
+					String firstName = friend.getString("firstname");
+					String lastName = friend.getString("lastname");
+					User u = new User(firstName, lastName, login);
+					friends.add(u);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
+			result.put("friends", friends);
+		}	
+
 		
-		} else {
-			
-			sessionTokens.put("error", "Server error");
-			
-		}
-		
-		Log.i("parsetoken",sessionTokens.toString());
-		return sessionTokens;	
+		Log.i("parsetoken",result.toString());
+		return result;	
 	
 	}
 	
