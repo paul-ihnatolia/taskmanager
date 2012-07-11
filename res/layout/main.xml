@@ -3,19 +3,51 @@
     android:id="@android:id/tabhost"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="5dp">
+        android:orientation="vertical"
+        android:padding="5dp" >
+
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" />
+
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:padding="5dp" />
+            android:layout_height="342dp"
+            android:layout_weight="0.34"
+            android:padding="5dp" >
+
+        </FrameLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/newtashgradient" >
+
+            <ImageView
+                android:id="@+id/closeImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="35dp"
+                android:src="@drawable/ic_menu_close" />
+
+            <ImageView
+                android:id="@+id/exirImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginRight="35dp"
+                android:src="@drawable/ic_menu_exit" />
+
+        </RelativeLayout>
     </LinearLayout>
+
 </TabHost>
