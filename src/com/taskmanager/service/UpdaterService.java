@@ -161,11 +161,11 @@ public class UpdaterService extends Service {
 				userDataSource.open();
 				userDataSource.insert(user);
 				userDataSource.close();
-				content = firstname + lastname + "added you to friend";
+				content = firstname + " " + lastname + " added you to friend";
 				sendBroadcast(new Intent("com.taskmanager.ContactActivity"));
 			} else {
 
-				content = firstname + lastname + " didn't add you to friend";
+				content = firstname + " " + lastname + " didn't add you to friend";
 			}
 
 			return content;
