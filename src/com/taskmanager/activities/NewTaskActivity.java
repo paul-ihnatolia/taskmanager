@@ -1,17 +1,10 @@
 package com.taskmanager.activities;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
-
-import com.taskmanager.R;
-import com.taskmanager.adapter.TasksArrayAdapter;
-import com.taskmanager.asynctasks.SendTask;
-import com.taskmanager.database.dao.TaskDataSource;
-import com.taskmanager.database.entities.Task;
-import com.taskmanager.database.entities.User;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -37,6 +30,12 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.taskmanager.R;
+import com.taskmanager.adapter.TasksArrayAdapter;
+import com.taskmanager.asynctasks.SendTask;
+import com.taskmanager.database.dao.TaskDataSource;
+import com.taskmanager.database.entities.Task;
+
 public class NewTaskActivity extends Activity implements OnClickListener {
 	
 	private EditText taskEdit;
@@ -48,6 +47,8 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	private int positionUser;
 	private View taskListView;
 	TaskDataSource taskdatabase;
+	private Button sendButton;
+	private ImageButton closeButton;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		
@@ -55,20 +56,12 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.newtask);
 		
 		TextView text = (TextView) findViewById(R.id.name);
-		Button sendButton = (Button) findViewById(R.id.send);
+		
+		sendButton = (Button) findViewById(R.id.send);
 		sendButton.setOnClickListener(this);
 		
-		
-		//Buttom close ne robuty!!!!!!!!!!!!!!!
-		ImageButton closeButton = (ImageButton) findViewById(R.id.closeButton);
-		closeButton.setOnClickListener( new OnClickListener() {
-			
-			public void onClick(View arg0) {
-				Log.i("close_button", "was clicked");
-				finish();
-				
-			}
-		});
+		closeButton = (ImageButton) findViewById(R.id.closeButton);
+		closeButton.setOnClickListener(this);
 		
 		taskEdit = (EditText) findViewById(R.id.content);
 		
@@ -99,8 +92,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		try{
 			createTaskList(login);
 		}catch (NullPointerException e) {
-			Log.e("error", "NullPointerException");
-			
+			Log.e("error", "NullPointerException");			
 			Toast toast = Toast.makeText(this, "No task", Toast.LENGTH_LONG);;
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
@@ -113,10 +105,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		list = taskdatabase.getAuthorAndRecipient(login);
 		taskdatabase.close();
     	TasksArrayAdapter adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
-   
+    	adapterTask.notifyDataSetChanged();
     	ListView listView = (ListView) findViewById(R.id.taskslist);
     	
-    	//
     	listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 
 			public void onItemClick(AdapterView<?> arg0, View v, int position,
@@ -135,43 +126,46 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 					toast.show();
 				}
 			}
-			}
-    	);
+		});
 		listView.setAdapter(adapterTask);
 	}
 	
 	//Send task
-	public void onClick(View arg0) {
-		Intent intent = getIntent();
-		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
-		String login = intent.getStringExtra("login");
-	    String content = taskEdit.getText().toString();
-	    Integer pri = priority;
-	    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
-	    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
-	    try {
-	    	String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
-	    	if(error.equals("Success")){
-	    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
-	    		
-		    	taskdatabase.open();
-		    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), login, content, "true", 0);
-		    	taskdatabase.insert(task);
-		    	taskdatabase.close();	
-		    	createTaskList(login);
-		    	taskEdit.getText().clear();
-	    	}else{
-		    	new AlertDialog.Builder(NewTaskActivity.this).setTitle("Error").setMessage(error).
-		    		setNeutralButton("Ok", null).show();
-	    	}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void onClick(View button) {
+		if(sendButton.getId() == button.getId()){
+			Intent intent = getIntent();
+			String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+			String login = intent.getStringExtra("login");
+		    String content = taskEdit.getText().toString();
+		    Integer pri = priority;
+		    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
+		    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
+		    try {
+		    	String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
+		    	if(error.equals("Success")){
+		    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+		    		
+			    	taskdatabase.open();
+			    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), login, content, "true", 0);
+			    	taskdatabase.insert(task);
+			    	taskdatabase.close();	
+			    	createTaskList(login);
+			    	taskEdit.getText().clear();
+		    	}else{
+			    	new AlertDialog.Builder(NewTaskActivity.this).setTitle("Error").setMessage(error).
+			    		setNeutralButton("Ok", null).show();
+		    	}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(closeButton.getId() == button.getId()){
+			Log.i("close_button", "was clicked");
+			finish();
 		}
-	    
 	}
 	protected Dialog onCreateDialog(int id) {
 		//Create dialogue for the task
