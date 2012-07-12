@@ -55,27 +55,7 @@ public class Registration extends AsyncTask<String, Void, String> {
 
 	private String parseResponse(String jsonResponse ) {
 		
-		String error = null;
-		if(jsonResponse != null) {
-			JSONObject jObject;
-			try {
-					jObject = new JSONObject(jsonResponse);
-					JSONObject sessionObject = jObject.getJSONObject("register");				
-					error = sessionObject.getString("error");
-
-				} catch (JSONException e) {
-					
-					e.printStackTrace();
-				}
-		
-		} else {
-			
-			error = "Server error";
-			
-		}
-		
-		return error;	
-
+		return HttpConnection.parse(jsonResponse, "register", "error").get("error").toString();
 	}
 	
 	@Override
