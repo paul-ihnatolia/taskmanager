@@ -10,9 +10,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,18 +40,51 @@ import com.taskmanager.database.entities.Task;
 
 public class NewTaskActivity extends Activity implements OnClickListener {
 	
+	private static final String TAG = NewTaskActivity.class.getSimpleName();
 	private EditText taskEdit;
 	Context context = this;
 	private String[] priorities = {"low", "average", "high"};
 	private List<Task> list;
 	private int priority;
-	final int DIALOG_COMPLETE = 1;
+	private final int DIALOG_COMPLETE = 1;
 	private int positionUser;
 	private View taskListView;
-	TaskDataSource taskdatabase;
+	private TaskDataSource taskdatabase;
 	private Button sendButton;
 	private ImageButton closeButton;
+	// if activity is active
+	private static boolean active = false;
+	private BroadcastReceiver receiver;
+	private TasksArrayAdapter adapterTask;
+	private static String login;
 	
+	@Override
+	protected void onStart() {
+		
+		super.onStart();
+		this.active = true;
+		Log.i("newtaskactivity", "active");
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		this.active = false;
+		Log.i("newtaskactivity", "not active");
+	}
+	
+	
+	public static String getLogin() {
+		if(login == null)
+			return "";
+		return login;
+	}
+
+	public static Boolean isActive() {
+		return active;
+	}
+
 	public void onCreate(Bundle savedInstanceState) {
 		
 		super.onCreate(savedInstanceState);
@@ -64,6 +99,31 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		closeButton.setOnClickListener(this);
 		
 		taskEdit = (EditText) findViewById(R.id.content);
+		
+		Intent intent = getIntent();
+	    String name = intent.getStringExtra("name");
+	     login = intent.getStringExtra("login");
+		
+	     Log.d(TAG, "login is "+login);
+		IntentFilter intentFilter = new IntentFilter(
+                "com.taskmanager.NewTaskActivity");
+		  receiver = new BroadcastReceiver() {
+			  
+			 
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				
+				Log.i("broadcastreceiver_at_new_task_activity", "Received");
+				if(active == true && adapterTask != null){
+					createTaskList(login);
+					Log.i(TAG, "creating tasklist...");
+				}
+			}
+		};
+		
+		this.registerReceiver(receiver, intentFilter);
+
+
 		
 		//Create adapter for spinner 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, priorities);
@@ -84,9 +144,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		
 		taskdatabase = new TaskDataSource(this);
 		
-		Intent intent = getIntent();
-	    String name = intent.getStringExtra("name");
-	    String login = intent.getStringExtra("login");
+
 	    
 	    text.setText(name + " (" + login + ")");
 		try{
@@ -97,6 +155,14 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}
+		
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(receiver);
 	}
 
 	private void createTaskList(String login){
@@ -104,8 +170,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		taskdatabase.open();
 		list = taskdatabase.getAuthorAndRecipient(login);
 		taskdatabase.close();
-    	TasksArrayAdapter adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
-    	adapterTask.notifyDataSetChanged();
+    	adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
     	ListView listView = (ListView) findViewById(R.id.taskslist);
     	
     	listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -133,9 +198,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	//Send task
 	public void onClick(View button) {
 		if(sendButton.getId() == button.getId()){
-			Intent intent = getIntent();
+			//Intent intent = getIntent();
 			String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
-			String login = intent.getStringExtra("login");
+		//	String login = intent.getStringExtra("login");
 		    String content = taskEdit.getText().toString();
 		    Integer pri = priority;
 		    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
@@ -167,6 +232,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 			finish();
 		}
 	}
+	
 	protected Dialog onCreateDialog(int id) {
 		//Create dialogue for the task
 		if (DIALOG_COMPLETE == id) {

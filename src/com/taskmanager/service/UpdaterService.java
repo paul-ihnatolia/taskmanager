@@ -121,11 +121,12 @@ public class UpdaterService extends Service {
 					try {
 						taskdatabase.open();
 						JSONArray tasksJson = (JSONArray) response.get("tasks");
+						String authorLogin=null;
 						for (int i = 0; i < tasksJson.length(); i++) {
 							JSONObject task = tasksJson.getJSONObject(i);
 							Integer serverId = task.getInt("id");
 							String content = task.getString("content");
-							String authorLogin = task.getString("user_login");
+							authorLogin = task.getString("user_login");
 							Integer priority = task.getInt("priority");
 
 							if (priority == 5)
@@ -140,6 +141,11 @@ public class UpdaterService extends Service {
 						taskdatabase.close();
 						sendBroadcast(new Intent(
 								"com.taskmanager.TasksActivity"));
+						if(com.taskmanager.activities.NewTaskActivity.isActive() && 
+								com.taskmanager.activities.NewTaskActivity.getLogin().equals(authorLogin)){
+							sendBroadcast(new Intent(
+									"com.taskmanager.NewTaskActivity"));
+						}
 						Log.i(TAG, "parsing");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
