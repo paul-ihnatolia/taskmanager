@@ -208,7 +208,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		    try {
 		    	String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
 		    	if(error.equals("Success")){
-		    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+		    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		    		
 			    	taskdatabase.open();
 			    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), login, content, "true", 0);

@@ -30,8 +30,10 @@ public class UpdaterService extends Service {
 	private String authToken;
 	private String login;
 	private Context context = this;
+	
 	@Override
 	public void onCreate() {
+		
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onCreated'd");
 		updater = new Updater();
@@ -114,8 +116,6 @@ public class UpdaterService extends Service {
 		}
 
 		private void parseResponse(String responseJsone) {
-			//NotificationUtils notification = NotificationUtils.getInstance(context);
-			
 			Log.i(TAG, responseJsone);
 			HashMap<String, Object> response = HttpConnection.parse(
 					responseJsone, "get_task", "quantity", "tasks");
@@ -141,11 +141,15 @@ public class UpdaterService extends Service {
 									login, content, "false", serverId);
 							taskdatabase.insert(t);
 							
-							//Create notification for statusBar
-							//notification.createInfoNotification("You have new message!", tasksJson.length());
+							
 						}
 
 						taskdatabase.close();
+						
+						//create notification
+						NotificationUtils notification = NotificationUtils.getInstance(context);
+						notification.createInfoNotification("You have new message!");
+												
 						sendBroadcast(new Intent(
 								"com.taskmanager.TasksActivity"));
 						if(com.taskmanager.activities.NewTaskActivity.isActive() && 
