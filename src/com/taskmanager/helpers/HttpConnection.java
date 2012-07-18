@@ -16,12 +16,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.taskmanager.helpers.httpsutils.HttpsClient;
+
 import android.util.Log;
 
 public class HttpConnection {
 	
 	private static final String TAG = HttpConnection.class.getSimpleName();
-	private static String BASE_URL = "http://task-manager-project.heroku.com";
+	private static String BASE_URL = "https://task-manager-project.heroku.com";
 
 	public static String makeRequest(String url,HashMap<String, Object> params){
 		
@@ -42,7 +44,7 @@ public class HttpConnection {
 				request.setEntity(se);
 				request.setHeader("Accept", "taskmanager/json");
 				request.setHeader("Content-Type", "taskmanager/json");
-				Log.i("http_connection", holder.toString());
+				Log.i(TAG, holder.toString());
 				
 			}catch (UnsupportedEncodingException e1) {
 				// TODO Auto-generated catch block
@@ -53,7 +55,7 @@ public class HttpConnection {
 			}
 			
 			ResponseHandler<String> rhandler = new BasicResponseHandler();
-			HttpClient httpClient = new DefaultHttpClient();
+			HttpClient httpClient = HttpsClient.getNewHttpClient();
 			
 			String jsonResponse = null;
 			
