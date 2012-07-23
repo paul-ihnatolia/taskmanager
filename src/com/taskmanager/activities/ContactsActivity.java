@@ -5,10 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
-import com.taskmanager.database.dao.UserDataSource;
-import com.taskmanager.database.entities.User;
-
 import android.app.ListActivity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,6 +17,9 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
+
+import com.taskmanager.database.dao.UserDataSource;
+import com.taskmanager.database.entities.User;
 
 public class ContactsActivity extends ListActivity {
 	UserDataSource userdatabase = new UserDataSource(this);

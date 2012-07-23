@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.taskmanager.database.dao.UserDataSource;
 import com.taskmanager.database.entities.Task;
 import com.taskmanager.database.entities.User;
 import com.taskmanager.helpers.HttpConnection;
+import com.taskmanager.helpers.NotificationUtils;
 
 public class UpdaterService extends Service {
 
@@ -27,9 +29,11 @@ public class UpdaterService extends Service {
 	UserDataSource userDataSource;
 	private String authToken;
 	private String login;
-
+	private Context context = this;
+	
 	@Override
 	public void onCreate() {
+		
 		// TODO Auto-generated method stub
 		Log.d(TAG, "onCreated'd");
 		updater = new Updater();
@@ -128,7 +132,7 @@ public class UpdaterService extends Service {
 							String content = task.getString("content");
 							authorLogin = task.getString("user_login");
 							Integer priority = task.getInt("priority");
-
+							
 							if (priority == 5)
 								content = saveNewFriend(content, authorLogin);
 
@@ -136,9 +140,16 @@ public class UpdaterService extends Service {
 							Task t = new Task(priority, authorLogin, createdAt,
 									login, content, "false", serverId);
 							taskdatabase.insert(t);
+							
+							
 						}
 
 						taskdatabase.close();
+						
+						//create notification
+						NotificationUtils notification = NotificationUtils.getInstance(context);
+						notification.createInfoNotification("You have new message!");
+												
 						sendBroadcast(new Intent(
 								"com.taskmanager.TasksActivity").putExtra("sound", true));
 						if(com.taskmanager.activities.NewTaskActivity.isActive() && 
@@ -146,6 +157,8 @@ public class UpdaterService extends Service {
 							sendBroadcast(new Intent(
 									"com.taskmanager.NewTaskActivity"));
 						}
+						
+					    
 						Log.i(TAG, "parsing");
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block

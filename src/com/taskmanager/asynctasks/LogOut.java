@@ -2,10 +2,10 @@ package com.taskmanager.asynctasks;
 
 import java.util.HashMap;
 
-import com.taskmanager.helpers.HttpConnection;
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+
+import com.taskmanager.helpers.HttpConnection;
 
 public class LogOut extends AsyncTask<String, String, String> {
 	

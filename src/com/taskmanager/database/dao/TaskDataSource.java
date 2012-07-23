@@ -186,6 +186,19 @@ public class TaskDataSource {
 			  mCursor.close();
 			  Collections.reverse(taskList);
 			  return taskList;
-		 }
-
+	}
+	public int sizeNewTasks() {
+		int size = 0;
+		Cursor mCursor = db.query(DatabaseHelper.taskTable, null,DatabaseHelper.taskComplete + " = ?",  new String[] {"false"}, null, null, null);
+		mCursor.moveToFirst();
+		
+		if (!mCursor.isAfterLast()) { 
+			do {
+				size++;
+			} while (mCursor.moveToNext());
+		}
+		
+		mCursor.close();
+		return size;
+	}
 }

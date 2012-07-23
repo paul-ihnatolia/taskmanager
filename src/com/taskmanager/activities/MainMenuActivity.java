@@ -2,12 +2,6 @@ package com.taskmanager.activities;
 
 import java.util.concurrent.ExecutionException;
 
-import com.taskmanager.R;
-import com.taskmanager.asynctasks.LogOut;
-import com.taskmanager.database.entities.Task;
-
-import com.taskmanager.service.UpdaterService;
-
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -17,15 +11,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TabHost;
+
+import com.taskmanager.R;
+import com.taskmanager.asynctasks.LogOut;
+import com.taskmanager.service.UpdaterService;
 
 public class MainMenuActivity extends TabActivity implements OnClickListener{ 
 

@@ -2,11 +2,10 @@ package com.taskmanager.asynctasks;
 
 import java.util.HashMap;
 
-import com.taskmanager.helpers.HttpConnection;
-
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.util.Log;
+
+import com.taskmanager.helpers.HttpConnection;
 
 public class SendTask extends AsyncTask<String, String, String> {
 	

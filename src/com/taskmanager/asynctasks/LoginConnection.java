@@ -70,10 +70,7 @@ public class LoginConnection extends AsyncTask<String,Void,HashMap<String, Objec
 				}
 			}
 			result.put("friends", friends);
-		}	
-
-		
-		
+		}			
 		return result;	
 	
 	}

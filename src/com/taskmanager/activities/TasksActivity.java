@@ -77,7 +77,8 @@ public class TasksActivity extends ListActivity{
 				
 				Log.i("broadcastreceiver_at task_activity", "Received");
 				createTaskList();
-				playSound();
+				if(intent.getBooleanExtra("sound", true))
+					playSound();
 			}
 		};
 		Log.i("taskactivity","receiver is created");

@@ -2,21 +2,17 @@ package com.taskmanager.adapter;
 
 import java.util.List;
 
-import com.taskmanager.R;
-import com.taskmanager.database.entities.Task;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
-import android.content.DialogInterface;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.taskmanager.R;
+import com.taskmanager.database.entities.Task;
 
 public class TasksArrayAdapter extends ArrayAdapter<Task>{
 	private final List<Task> list;

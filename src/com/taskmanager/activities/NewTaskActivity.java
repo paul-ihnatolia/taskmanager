@@ -38,7 +38,7 @@ import com.taskmanager.asynctasks.SendTask;
 import com.taskmanager.database.dao.TaskDataSource;
 import com.taskmanager.database.entities.Task;
 
-public class NewTaskActivity extends Activity implements OnClickListener{
+public class NewTaskActivity extends Activity implements OnClickListener {
 	
 	private static final String TAG = NewTaskActivity.class.getSimpleName();
 	private EditText taskEdit;
@@ -89,6 +89,7 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 		
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.newtask);
+		
 		TextView text = (TextView) findViewById(R.id.name);
 		
 		sendButton = (Button) findViewById(R.id.send);
@@ -195,37 +196,41 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 	}
 	
 	//Send task
-	public void onClick(View arg0) {
-		Intent intent = getIntent();
-		String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
-		String login = intent.getStringExtra("login");
-	    String content = taskEdit.getText().toString();
-	    Integer pri = priority;
-	    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
-	    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
-	    try {
-	    	String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
-	    	if(error.equals("Success")){
-	    		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy.MM.dd HH:mm");
-	    		
-		    	taskdatabase.open();
-		    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), login, content, "true", 0);
-		    	taskdatabase.insert(task);
-		    	taskdatabase.close();	
-		    	createTaskList(login);
-		    	taskEdit.getText().clear();
-	    	}else{
-		    	new AlertDialog.Builder(NewTaskActivity.this).setTitle("Error").setMessage(error).
-		    		setNeutralButton("Ok", null).show();
-	    	}
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ExecutionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+	public void onClick(View button) {
+		if(sendButton.getId() == button.getId()){
+			//Intent intent = getIntent();
+			String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
+		//	String login = intent.getStringExtra("login");
+		    String content = taskEdit.getText().toString();
+		    Integer pri = priority;
+		    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
+		    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
+		    try {
+		    	String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
+		    	if(error.equals("Success")){
+		    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+		    		
+			    	taskdatabase.open();
+			    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), login, content, "true", 0);
+			    	taskdatabase.insert(task);
+			    	taskdatabase.close();	
+			    	createTaskList(login);
+			    	taskEdit.getText().clear();
+		    	}else{
+			    	new AlertDialog.Builder(NewTaskActivity.this).setTitle("Error").setMessage(error).
+			    		setNeutralButton("Ok", null).show();
+		    	}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}else if(closeButton.getId() == button.getId()){
+			Log.i("close_button", "was clicked");
+			finish();
 		}
-	    
 	}
 	
 	protected Dialog onCreateDialog(int id) {
@@ -250,7 +255,6 @@ public class NewTaskActivity extends Activity implements OnClickListener{
 					taskdatabase.open();
 					taskdatabase.update(task);
 					taskdatabase.close();
-					sendBroadcast(new Intent("com.taskmanager.TasksActivity").putExtra("sound", false));
 					
 					switch (list.get(positionUser).getPriority()) {
 					case 1:
