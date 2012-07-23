@@ -140,7 +140,7 @@ public class UpdaterService extends Service {
 
 						taskdatabase.close();
 						sendBroadcast(new Intent(
-								"com.taskmanager.TasksActivity"));
+								"com.taskmanager.TasksActivity").putExtra("sound", true));
 						if(com.taskmanager.activities.NewTaskActivity.isActive() && 
 								com.taskmanager.activities.NewTaskActivity.getLogin().equals(authorLogin)){
 							sendBroadcast(new Intent(
