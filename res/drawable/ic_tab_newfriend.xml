@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:drawable="@drawable/ic_tab_newfriend_grey"
+    <item android:drawable="@drawable/ic_tab_newfriend_white"
           android:state_selected="true" />
-    <item android:drawable="@drawable/ic_tab_newfriend_white" />
+    <item android:drawable="@drawable/ic_tab_newfriend_grey" />
 
 </selector>

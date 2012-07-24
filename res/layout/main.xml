@@ -8,26 +8,26 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:orientation="vertical"
-        android:padding="5dp" >
+        android:background="#fff">
 
         <TabWidget
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content" 
+            android:background="#fff"/>
 
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="342dp"
-            android:layout_weight="0.34"
-            android:padding="5dp" >
+            android:layout_weight="0.34">
 
         </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/newtashgradient" >
+            android:background="#33b5e5" >
 
             <ImageView
                 android:id="@+id/closeImage"

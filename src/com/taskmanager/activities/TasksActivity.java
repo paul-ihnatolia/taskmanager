@@ -14,7 +14,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.media.SoundPool.OnLoadCompleteListener;
@@ -22,6 +21,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,7 +40,6 @@ public class TasksActivity extends ListActivity{
 	private List<Task> list;
 	private BroadcastReceiver receiver;
 	private int positionUser;
-	private View taskListView;
 	TaskDataSource taskdatabase;
 	UserDataSource userdatabase;
 	// for playing sound
@@ -50,6 +49,7 @@ public class TasksActivity extends ListActivity{
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+				
 		taskdatabase = new TaskDataSource(this);
 		userdatabase = new UserDataSource(this);
 		
@@ -60,7 +60,6 @@ public class TasksActivity extends ListActivity{
 			public void onLoadComplete(SoundPool soundPool, int sampleId,
 					int status) {
 				loaded = true;
-				
 			}
 	
 		});
@@ -125,7 +124,6 @@ public class TasksActivity extends ListActivity{
 	public void onListItemClick(ListView parent, View v, int position, long id) {
 		
 		Task task = list.get(position);
-		taskListView = v;
 		if (task.getPriority() == 4 && task.getComplete().equals("false")){
 			showDialog(DIALOG_ADD_FRIEND);
 		}
@@ -142,6 +140,7 @@ public class TasksActivity extends ListActivity{
 	}
 	
 	protected Dialog onCreateDialog(int id) {
+		
 		switch (id) {
 		
 		//a dialogue to add as a friend
@@ -154,8 +153,11 @@ public class TasksActivity extends ListActivity{
 	        adb.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				
 				public void onClick(DialogInterface dialog, int which) {
+					ImageView completeImageView = (ImageView) findViewById(R.id.completeImageView);
+					
 					HashMap<String, Object> results = friendship("Ok");
 					if(results.get("error").equals("Success")){
+						
 						String login = results.get("login").toString();
 						String firstName = results.get("firstname").toString();
 						String lastName = results.get("lastname").toString();
@@ -172,7 +174,7 @@ public class TasksActivity extends ListActivity{
 						taskdatabase.update(task);
 						taskdatabase.close();
 						
-						taskListView.setBackgroundColor(Color.parseColor("#ffbb33"));
+						completeImageView.setImageResource(R.drawable.complete);
 						
 					}
 					
@@ -198,35 +200,17 @@ public class TasksActivity extends ListActivity{
 	        adb2.setMessage("You have completed the task?");
 	      
 	        adb2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-				public void onClick(DialogInterface dialog, int which) {
-					
-					int green = Color.parseColor("#99cc00");
-					int blue = Color.parseColor("#34b6e4");
-					int red = Color.parseColor("#ff4444");
-					int orange = Color.parseColor("#ffbb33");
-					int proirityColor = -1;
-					
+				
+	        	public void onClick(DialogInterface dialog, int which) {
+	        		ImageView completeImageView = (ImageView) findViewById(R.id.completeImageView);
+	        		
 					Task task = list.get(positionUser);
 					task.setComplete("true");
 					taskdatabase.open();
 					taskdatabase.update(task);
 					taskdatabase.close();
 					
-					switch (list.get(positionUser).getPriority()) {
-					case 1:
-						proirityColor = red;
-						break;
-					case 2:
-						proirityColor = blue;
-						break;
-					case 3:
-						proirityColor = green;
-						break;
-					case 5:
-						proirityColor = orange;
-						break;	
-					}
-					taskListView.setBackgroundColor(proirityColor);
+					completeImageView.setImageResource(R.drawable.complete);
 				}
 			});
 	        

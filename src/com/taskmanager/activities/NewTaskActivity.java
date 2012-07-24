@@ -27,6 +27,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -50,8 +51,8 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	private int positionUser;
 	private View taskListView;
 	private TaskDataSource taskdatabase;
-	private Button sendButton;
-	private ImageButton closeButton;
+	private ImageView sendButton;
+	private ImageView closeButton;
 	// if activity is active
 	private static boolean active = false;
 	private BroadcastReceiver receiver;
@@ -92,10 +93,12 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		
 		TextView text = (TextView) findViewById(R.id.name);
 		
-		sendButton = (Button) findViewById(R.id.send);
+		sendButton = (ImageView) findViewById(R.id.send);
+		sendButton.setClickable(true);
 		sendButton.setOnClickListener(this);
 		
-		closeButton = (ImageButton) findViewById(R.id.closeButton);
+		closeButton = (ImageView) findViewById(R.id.closeButton);
+		closeButton.setClickable(true);
 		closeButton.setOnClickListener(this);
 		
 		taskEdit = (EditText) findViewById(R.id.content);
@@ -243,37 +246,14 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	      
 	        adb2.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int which) {
-					
-					int green = Color.parseColor("#99cc00");
-					int blue = Color.parseColor("#34b6e4");
-					int red = Color.parseColor("#ff4444");
-					int orange = Color.parseColor("#ffbb33");
-					int proirityColor = -1;
-					
+					ImageView completeImageView = (ImageView) findViewById(R.id.completeImageView);
 					Task task = list.get(positionUser);
 					task.setComplete("true");
 					taskdatabase.open();
 					taskdatabase.update(task);
 					taskdatabase.close();
 					
-					switch (list.get(positionUser).getPriority()) {
-					case 1:
-						proirityColor = red;
-						break;
-					case 2:
-						proirityColor = blue;
-						break;
-					case 3:
-						proirityColor = green;
-						break;
-					case 4:
-						proirityColor = orange;						
-						break;
-					case 5:
-						proirityColor = orange;
-						break;	
-					}
-					taskListView.setBackgroundColor(proirityColor);
+					completeImageView.setImageResource(R.drawable.complete);
 				}
 			});
 	        

@@ -2,6 +2,11 @@ package com.taskmanager.activities;
 
 import java.util.concurrent.ExecutionException;
 
+import com.taskmanager.R;
+import com.taskmanager.asynctasks.LogOut;
+
+import com.taskmanager.service.UpdaterService;
+
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -16,16 +21,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TabHost;
-
-import com.taskmanager.R;
-import com.taskmanager.asynctasks.LogOut;
-import com.taskmanager.service.UpdaterService;
+import android.widget.TabHost.OnTabChangeListener;
 
 public class MainMenuActivity extends TabActivity implements OnClickListener{ 
-
-
 	public static final int DIALOG_EXIT = 102;
 	private Context context = this;
+	static TabHost tabHost;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		
@@ -40,7 +42,7 @@ public class MainMenuActivity extends TabActivity implements OnClickListener{
 		exitImageView.setOnClickListener(this);
 		
         Resources res = getResources(); 
-        TabHost tabHost = getTabHost();  
+        tabHost = getTabHost();  
         TabHost.TabSpec spec;  
         Intent intent;
         
@@ -66,7 +68,25 @@ public class MainMenuActivity extends TabActivity implements OnClickListener{
         
         startService(new Intent(this,UpdaterService.class));
         
+        setTabColor(tabHost);
+        
+    
 
+        tabHost.setOnTabChangedListener(new OnTabChangeListener() {
+
+			public void onTabChanged(String arg0) {
+				setTabColor(tabHost);
+				
+			}
+                
+        });  
+	}
+	
+	public static void setTabColor(TabHost tabHost) {
+	    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
+	    	tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_not_pressed_bg);
+	    }
+	    tabHost.getTabWidget().getChildAt(tabHost.getCurrentTab()).setBackgroundResource(R.drawable.tab_pressed_bg);
 	}
 	
 	public void onClick(View v) {

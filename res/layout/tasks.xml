@@ -3,39 +3,57 @@
     android:id="@+id/background"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp" >
+    android:background="#ffffff"
+    android:orientation="horizontal"
+    android:padding="5dp" >
 
-        <LinearLayout
-            android:id="@+id/priority"
+    <LinearLayout
+        android:id="@+id/priority"
+        android:layout_width="10dp"
+        android:layout_height="match_parent" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/content"
+        android:layout_width="240dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.55"
+        android:orientation="vertical"
+        android:padding="5dp" >
+
+        <TextView
+            android:id="@+id/authorTask"
+            style="@style/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/textTask"
+            style="@style/text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
-            <TextView 
-	            style="@style/text"
-	            android:id="@+id/authorTask"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="center"
-	            android:text="Medium Text" 
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <TextView
-	            android:id="@+id/textTask"
-	            style="@style/text"
-	            android:layout_width="wrap_content"
-	            android:layout_height="match_parent"
-	            android:text="Medium Text"
-	            android:textAppearance="?android:attr/textAppearanceMedium" />
-	
-	        <TextView
-	            android:id="@+id/dataTask"
-	            style="@style/text"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_gravity="right"
-	            android:text="Small Text"
-	            android:textAppearance="?android:attr/textAppearanceSmall" />
-        </LinearLayout>
+            android:text="Medium Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+        <TextView
+            android:id="@+id/dataTask"
+            style="@style/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/completeImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:src="@drawable/complete" />
 
 </LinearLayout>

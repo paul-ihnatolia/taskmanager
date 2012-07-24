@@ -2,17 +2,18 @@ package com.taskmanager.adapter;
 
 import java.util.List;
 
+import com.taskmanager.R;
+import com.taskmanager.database.entities.Task;
+
 import android.app.Activity;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import com.taskmanager.R;
-import com.taskmanager.database.entities.Task;
 
 public class TasksArrayAdapter extends ArrayAdapter<Task>{
 	private final List<Task> list;
@@ -38,6 +39,7 @@ public class TasksArrayAdapter extends ArrayAdapter<Task>{
 		public TextView dataTextView;
 		public LinearLayout backraundLayuot;
 		public LinearLayout priorityLayuot;
+		public ImageView completeImageView;
 		
     }
 	
@@ -45,7 +47,6 @@ public class TasksArrayAdapter extends ArrayAdapter<Task>{
 		int green = Color.parseColor("#99cc00");
 		int blue = Color.parseColor("#34b6e4");
 		int red = Color.parseColor("#ff4444");
-		int white = Color.parseColor("#ffffff");
 		int orange = Color.parseColor("#ffbb33");
 		int proirityColor = -1;
 		ViewHolder holder;
@@ -60,7 +61,7 @@ public class TasksArrayAdapter extends ArrayAdapter<Task>{
 	        holder.dataTextView = (TextView) rowView.findViewById(R.id.dataTask);
 	        holder.backraundLayuot = (LinearLayout) rowView.findViewById(R.id.background);
 	        holder.priorityLayuot = (LinearLayout) rowView.findViewById(R.id.priority);
-	       
+	        holder.completeImageView = (ImageView) rowView.findViewById(R.id.completeImageView);
 	        
 	        rowView.setTag(holder);
 		}
@@ -71,33 +72,31 @@ public class TasksArrayAdapter extends ArrayAdapter<Task>{
 		holder.authorTextView.setText(list.get(position).getAuthor());
 		holder.contentTextView.setText(list.get(position).getContent());
 		holder.dataTextView.setText(list.get(position).getTime());
-		
-	
 
 		switch (list.get(position).getPriority()) {
-		case 1:
+		case 3:
 			proirityColor = red;
 			break;
 		case 2:
-			proirityColor = blue;
+			proirityColor = orange;
 			break;
-		case 3:
+		case 1:
 			proirityColor = green;
 			break;
 		case 4:
-			proirityColor = orange;
+			proirityColor = blue;
 			break;
 		case 5:
-			proirityColor = orange;
+			proirityColor = blue;
 			break;	
 		}
 		
 		holder.priorityLayuot.setBackgroundColor(proirityColor);
 		
 		if(list.get(position).getComplete().equals("false"))
-        	holder.backraundLayuot.setBackgroundColor(white);
+        	holder.completeImageView.setImageResource(R.drawable.ic_tab_message_grey);
 		else
-			holder.backraundLayuot.setBackgroundColor(proirityColor);
+			holder.completeImageView.setImageResource(R.drawable.complete);
         
         return rowView;
 	}

@@ -9,9 +9,8 @@ import com.taskmanager.R;
 public class CheckFields {
 	
 	private static String regexLogin = "^[a-z]([a-z0-9_\\.\\-])*[a-z0-9]$";
-	
-	private static String regexName = "^([a-zA-Z–∞-—è–ê-–Ø—ñ–Ü—ó–á—î–Ñ“ë“ê0-9_\\.\\-\\ ])*$";
-	
+
+	private static String regexName = "^([a-zA-Z‡-ˇ¿-ﬂ≥≤øØ∫™¥•0-9_\\.\\-\\ ])*$";
 
 	public static boolean checkBeforeRegistraton(String firstName,
 			String lastName, String login, String password, Activity activity) {
