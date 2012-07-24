@@ -10,13 +10,14 @@
         android:layout_height="wrap_content"
         android:background="#33b5e5" 
         android:padding="5dp">
-
+
+
         <ImageView
             android:id="@+id/closeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/selector" />
+            android:src="@drawable/back" />
 
         <TextView
             android:id="@+id/name"
@@ -42,7 +43,10 @@
         android:background="#33b5e5"
         android:gravity="center"
         android:padding="5dp" >
-
+
+
+
+
         <EditText
             android:id="@+id/content"
             android:layout_width="wrap_content"
