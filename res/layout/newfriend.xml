@@ -19,13 +19,13 @@
             android:ems="10"
             android:inputType="text"
             android:padding="5dp" />
-
+
         <ImageView
             android:id="@+id/searchbutton"
             android:layout_width="50dp"
             android:layout_height="match_parent"
             android:layout_weight="0.07"
-            android:src="@drawable/searchbutton" />
+            android:src="@drawable/selector_search" />
 
     </LinearLayout>
     

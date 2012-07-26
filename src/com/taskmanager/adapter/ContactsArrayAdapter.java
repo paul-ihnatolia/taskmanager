@@ -7,6 +7,7 @@ import com.taskmanager.database.entities.User;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +17,7 @@ import android.widget.TextView;
 public class ContactsArrayAdapter extends ArrayAdapter<User>{
 	private final List<User> list;
     private final Activity context;
-    
+  
 	public ContactsArrayAdapter(Activity context, int textViewResourceId,
 			List<User> list) {
 		super(context, textViewResourceId, list);
@@ -37,7 +38,7 @@ public class ContactsArrayAdapter extends ArrayAdapter<User>{
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder;
 		View rowView = convertView;
-		
+
 		if (rowView == null){
 			
 			LayoutInflater inflater = context.getLayoutInflater();
@@ -47,17 +48,18 @@ public class ContactsArrayAdapter extends ArrayAdapter<User>{
 	        holder.nameTextView = (TextView) rowView.findViewById(R.id.nameContact);
 	        holder.loginTextView = (TextView) rowView.findViewById(R.id.loginContact);
 	        
-	        holder.nameTextView.setTextColor(Color.BLACK);
-	        holder.loginTextView.setTextColor(Color.BLACK);
-	        
-	        holder.nameTextView.setText(list.get(position).getFirstname() + " " + list.get(position).getLastname());
-	        holder.loginTextView.setText(list.get(position).getLogin());
-	        
 	        rowView.setTag(holder);
 		}
 		else{
 			holder = (ViewHolder) rowView.getTag();
 		}
+		
+		 holder.nameTextView.setTextColor(Color.BLACK);
+	     holder.loginTextView.setTextColor(Color.BLACK);
+	        
+	     holder.nameTextView.setText(list.get(position).getFirstname() + " " + list.get(position).getLastname());
+	     holder.loginTextView.setText(list.get(position).getLogin());
+	        
 		return rowView;
 	}
 }
