@@ -3,13 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-
+    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#33b5e5"
-        android:padding="5dp" >
-
+        android:background="@color/blue"
+        android:paddingBottom="5dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="5dp" >
+
         <EditText
             android:id="@+id/serchfield"
             android:layout_width="wrap_content"
@@ -19,13 +21,15 @@
             android:ems="10"
             android:inputType="text"
             android:padding="5dp" />
-
+
         <ImageView
             android:id="@+id/searchbutton"
-            android:layout_width="50dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_weight="0.07"
-            android:src="@drawable/selector_search" />
+            android:background="@drawable/selector_buttom"
+            android:src="@drawable/search"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp" />
 
     </LinearLayout>
     

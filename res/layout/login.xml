@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_vertical" >
+    android:gravity="center_vertical"
+    android:background="@color/white">
 
 		<TextView
 	        android:id="@+id/textView1"
@@ -11,6 +12,7 @@
 	        android:layout_centerHorizontal="true"
 	        android:layout_marginBottom="20dp"
 	        android:text="@string/app_name"
+	        android:textColor="@color/black"
 	        android:textAppearance="?android:attr/textAppearanceLarge" />
     
         <EditText
@@ -23,6 +25,7 @@
 	        android:layout_marginBottom="20dp"
 	        android:background="@drawable/rounded_edittext"
 	        android:ems="10"
+	        android:inputType="textPersonName"
 	        android:hint="@string/login"
 	        android:padding="8dp" />
 	    
@@ -40,9 +43,6 @@
 	        android:hint="@string/password"
 	        android:padding="8dp" />
 
-        <requestFocus />
-
-
     <LinearLayout
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
@@ -51,16 +51,23 @@
         android:layout_centerHorizontal="true" >
 
         <Button
+            android:background="@drawable/selector_buttom"
             android:id="@+id/loginB"
             android:layout_width="121dp"
             android:layout_height="wrap_content"
-            android:text="@string/enter" />
+            android:text="@string/enter" 
+            android:textColor="@color/white"
+            android:padding="10dp"
+            android:layout_marginRight="5dp"/>
 
         <Button
+            android:background="@drawable/selector_buttom"
             android:id="@+id/registerB"
             android:layout_width="131dp"
             android:layout_height="wrap_content"
-            android:text="@string/registration" />
+            android:text="@string/registration" 
+            android:textColor="@color/white"
+            android:padding="10dp"/>
         
     </LinearLayout>
 </RelativeLayout>

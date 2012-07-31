@@ -44,7 +44,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	private static final String TAG = NewTaskActivity.class.getSimpleName();
 	private EditText taskEdit;
 	Context context = this;
-	private String[] priorities = {"low", "average", "high"};
+	private String[] priorities = {"High priority","Medium priority","Low priority"};
 	private List<Task> list;
 	private int priority;
 	private final int DIALOG_COMPLETE = 1;

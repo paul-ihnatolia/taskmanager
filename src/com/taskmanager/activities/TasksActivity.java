@@ -250,4 +250,11 @@ public class TasksActivity extends ListActivity{
 			
 			return results;
 	  }
+	  //Update Task list
+	  protected void onRestart() {
+		    super.onRestart();
+		    createTaskList();
+		    Log.d("onRestart", "onRestart");
+		  }
+
 }

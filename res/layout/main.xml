@@ -14,21 +14,27 @@
             android:id="@android:id/tabs"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" 
-            android:background="#fff"/>
-
+            android:tabStripEnabled="false"/>
+        
+		<View android:id="@+id/lineTab"
+		    android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="#0099cc"/>
+		
         <FrameLayout
             android:id="@android:id/tabcontent"
             android:layout_width="fill_parent"
             android:layout_height="342dp"
-            android:layout_weight="0.34">
+            android:layout_weight="0.01">
 
         </FrameLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#33b5e5" >
-
+            android:background="@color/blue" 
+            android:padding="3dp">
+            
             <ImageView
                 android:id="@+id/closeImage"
                 android:layout_width="wrap_content"
@@ -36,8 +42,9 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="35dp"
-                android:src="@drawable/selector_close" />
-
+                android:background="@drawable/selector_buttom"
+                android:src="@drawable/ic_menu_close"/>
+            
             <ImageView
                 android:id="@+id/exirImage"
                 android:layout_width="wrap_content"
@@ -45,7 +52,8 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="35dp"
-                android:src="@drawable/selector_exit" />
+                android:background="@drawable/selector_buttom"
+                android:src="@drawable/ic_menu_exit" />
 
         </RelativeLayout>
     </LinearLayout>

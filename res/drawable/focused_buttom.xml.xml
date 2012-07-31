@@ -3,11 +3,10 @@
     <item>
         <shape android:shape="rectangle"> 
             <corners android:radius="5dp"/>
-        	<solid android:color="#8ad5f0" />
+        	<solid android:color="@color/blue" />
+        	<stroke android:width="3dp" android:color="@color/black_blue"/>
+     
 		</shape>
     </item>
-    <item>
-      <bitmap android:src="@drawable/back"
-        android:gravity="center" />
-    </item>
+
 </layer-list>

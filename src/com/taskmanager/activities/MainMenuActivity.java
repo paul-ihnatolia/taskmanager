@@ -19,6 +19,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -45,19 +46,19 @@ public class MainMenuActivity extends TabActivity implements OnClickListener{
         tabHost = getTabHost();  
         TabHost.TabSpec spec;  
         Intent intent;
-        
+      
         intent = new Intent().setClass(this, TasksActivity.class);
         spec = tabHost.newTabSpec("tasks").setIndicator("Tasks",
                           res.getDrawable(R.drawable.ic_tab_message))
                       .setContent(intent);
         tabHost.addTab(spec);
-        
+                
         intent = new Intent().setClass(this, ContactsActivity.class);
         spec = tabHost.newTabSpec("contacts").setIndicator("Contacts",
                           res.getDrawable(R.drawable.ic_tab_contacts))
                       .setContent(intent);
         tabHost.addTab(spec);
-     
+        
         intent = new Intent().setClass(MainMenuActivity.this, NewFriendActivity.class);
         spec = tabHost.newTabSpec("newfriend").setIndicator("Add new contact",
                           res.getDrawable(R.drawable.ic_tab_newfriend))
@@ -81,7 +82,7 @@ public class MainMenuActivity extends TabActivity implements OnClickListener{
                 
         });  
 	}
-	
+
 	public static void setTabColor(TabHost tabHost) {
 	    for (int i = 0; i < tabHost.getTabWidget().getChildCount(); i++) {
 	    	tabHost.getTabWidget().getChildAt(i).setBackgroundResource(R.drawable.tab_not_pressed_bg);
