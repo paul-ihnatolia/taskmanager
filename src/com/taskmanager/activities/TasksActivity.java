@@ -255,6 +255,6 @@ public class TasksActivity extends ListActivity{
 		    super.onRestart();
 		    createTaskList();
 		    Log.d("onRestart", "onRestart");
-		  }
+	  }
 
 }

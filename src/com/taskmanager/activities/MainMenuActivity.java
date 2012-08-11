@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
@@ -35,12 +36,11 @@ public class MainMenuActivity extends TabActivity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		ImageView closeImageView = (ImageView) findViewById(R.id.closeImage);
-		ImageView exitImageView = (ImageView) findViewById(R.id.exirImage);
-		closeImageView.setClickable(true);
-		exitImageView.setClickable(true);
-		closeImageView.setOnClickListener(this);
-		exitImageView.setOnClickListener(this);
+		ImageButton closeImageButton = (ImageButton) findViewById(R.id.closeImage);
+		ImageButton exitImageButton = (ImageButton) findViewById(R.id.exirImage);
+		
+		closeImageButton.setOnClickListener(this);
+		exitImageButton.setOnClickListener(this);
 		
         Resources res = getResources(); 
         tabHost = getTabHost();  

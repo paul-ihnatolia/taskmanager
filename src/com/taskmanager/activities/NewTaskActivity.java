@@ -51,8 +51,8 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	private int positionUser;
 	private View taskListView;
 	private TaskDataSource taskdatabase;
-	private ImageView sendButton;
-	private ImageView closeButton;
+	private ImageButton sendButton;
+	private ImageButton closeButton;
 	// if activity is active
 	private static boolean active = false;
 	private BroadcastReceiver receiver;
@@ -93,12 +93,10 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		
 		TextView text = (TextView) findViewById(R.id.name);
 		
-		sendButton = (ImageView) findViewById(R.id.send);
-		sendButton.setClickable(true);
+		sendButton = (ImageButton) findViewById(R.id.send);
 		sendButton.setOnClickListener(this);
 		
-		closeButton = (ImageView) findViewById(R.id.closeButton);
-		closeButton.setClickable(true);
+		closeButton = (ImageButton) findViewById(R.id.closeButton);
 		closeButton.setOnClickListener(this);
 		
 		taskEdit = (EditText) findViewById(R.id.content);

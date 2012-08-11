@@ -32,10 +32,9 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/blue" 
-            android:padding="3dp">
+            android:background="@color/blue" >
             
-            <ImageView
+            <ImageButton
                 android:id="@+id/closeImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,9 +42,10 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="35dp"
                 android:background="@drawable/selector_buttom"
-                android:src="@drawable/ic_menu_close"/>
+                android:src="@drawable/ic_menu_close"
+                android:padding="5dp"/>
             
-            <ImageView
+            <ImageButton
                 android:id="@+id/exirImage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,7 +53,8 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginRight="35dp"
                 android:background="@drawable/selector_buttom"
-                android:src="@drawable/ic_menu_exit" />
+                android:src="@drawable/ic_menu_exit" 
+                android:padding="5dp"/>
 
         </RelativeLayout>
     </LinearLayout>

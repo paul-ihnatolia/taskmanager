@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -39,11 +40,8 @@ public class NewFriendActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.newfriend);
 		
-		
-		
-		ImageView searchImageView = (ImageView) findViewById(R.id.searchbutton);
-		searchImageView.setClickable(true);
-		searchImageView.setOnClickListener(this);
+		ImageButton searchImageButton = (ImageButton) findViewById(R.id.searchbutton);
+		searchImageButton.setOnClickListener(this);
 		
 		frendList = (ListView) findViewById(R.id.serchList);		
 		frendList.setClickable(true);
