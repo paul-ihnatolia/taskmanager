@@ -1,7 +1,11 @@
 package com.taskmanager.database.dao;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -133,8 +137,9 @@ public class TaskDataSource {
 		
 		mCursor.close();
 		
-		Collections.reverse(neVuk);
-		Collections.reverse(vuk);
+		sortTaskList(neVuk);
+		sortTaskList(vuk);
+		
 		neVuk.addAll(vuk);
 		Log.i("tds", neVuk.toString());
 		return neVuk;
@@ -169,6 +174,8 @@ public class TaskDataSource {
 			} while (mCursor.moveToNext());
 		}
 		mCursor.close();
+		
+		
 		neVuk.addAll(vuk);
 		Log.i("tds", neVuk.toString());
 		return neVuk;
@@ -218,9 +225,10 @@ public class TaskDataSource {
 				    String complete = mCursor.getString(TASK_COLUMN_COMPLETE);
 				    int serverId = mCursor.getInt(TASK_COLUMN_SERVERID);
 				    String owner = mCursor.getString(TASK_COLUMN_OWNER);
-
-				    taskList.add(new Task(id, priority, author, time, recipient, content, complete, serverId, owner));
-			    
+				    
+				    if(priority != 4 && priority != 5)
+				    	taskList.add(new Task(id, priority, author, time, recipient, content, complete, serverId, owner));
+				    
 			  } while (mCursor.moveToNext());
 		  }
 		  mCursor.close();
@@ -241,5 +249,26 @@ public class TaskDataSource {
 		
 		mCursor.close();
 		return size;
+	}
+	public ArrayList<Task> sortTaskList(ArrayList<Task> taskList){
+		  
+		Collections.sort(taskList, new Comparator<Task>() {
+			    public int compare(Task task1, Task task2) {
+			    	
+			    	SimpleDateFormat formatter ; 
+					formatter = new SimpleDateFormat("dd.MM.yyyy HH:mm");
+							    	
+					try {
+						return ((Date)formatter.parse(task1.getTime())).compareTo((Date)formatter.parse(task2.getTime()));
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					return 0;
+
+			    }
+			});
+		  Collections.reverse(taskList);
+		
+		return taskList;
 	}
 }

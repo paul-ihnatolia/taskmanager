@@ -176,6 +176,7 @@ public class TasksActivity extends ListActivity{
 						taskdatabase.update(task);
 						taskdatabase.close();
 						
+						
 						completeImageView.setImageResource(R.drawable.complete);
 						
 					}
@@ -188,10 +189,20 @@ public class TasksActivity extends ListActivity{
 				
 				public void onClick(DialogInterface dialog, int which) {
 					HashMap<String, Object> results = friendship("No");
+					
+					Task task = list.get(positionUser);
+					task.setComplete("true");
+					taskdatabase.open();
+					taskdatabase.update(task);
+					taskdatabase.close();
+					
 					dialog.cancel();	
+					
 				}
 	        });
-
+	        //Update task list
+	        createTaskList();
+	        
 	    	return adb.create();
 	    
 	    //Create dialogue for the task
@@ -211,8 +222,10 @@ public class TasksActivity extends ListActivity{
 					taskdatabase.open();
 					taskdatabase.update(task);
 					taskdatabase.close();
-					
+	
 					completeImageView.setImageResource(R.drawable.complete);
+					//Update task list
+					createTaskList();
 				}
 			});
 	        

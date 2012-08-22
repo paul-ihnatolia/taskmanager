@@ -44,7 +44,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	private static final String TAG = NewTaskActivity.class.getSimpleName();
 	private EditText taskEdit;
 	Context context = this;
-	private String[] priorities = {"High priority","Medium priority","Low priority"};
+	private String[] priorities = {"Low priority" ,"Medium priority","High priority"};
 	private List<Task> list;
 	private int priority;
 	private final int DIALOG_COMPLETE = 1;
@@ -173,6 +173,8 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		list = taskdatabase.getOwnerAndAuthor(login, authorLogin);
 		list.addAll(taskdatabase.getAuthorAndRecipient(login, recipientLogin));
 		
+		list = taskdatabase.sortTaskList((ArrayList<Task>)list);
+		
 		taskdatabase.close();
     	adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
   
@@ -256,6 +258,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 					taskdatabase.close();
 					
 					completeImageView.setImageResource(R.drawable.complete);
+					
+					//Update task list
+					createTaskList(recipientLogin);
 				}
 			});
 	        
@@ -269,4 +274,5 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		
 		return super.onCreateDialog(id);
 	}
+	
 }
