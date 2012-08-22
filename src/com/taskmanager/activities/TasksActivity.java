@@ -114,9 +114,11 @@ public class TasksActivity extends ListActivity{
 	private void createTaskList(){
 		taskdatabase.open();
 		String login = getSharedPreferences("CurrentUser", 0).getString("login", null);
+				
 		list = taskdatabase.getRecipientAll(login);
-		taskdatabase.close();
 		
+		taskdatabase.close();
+
     	TasksArrayAdapter adapter = new TasksArrayAdapter(this, list);
     	setListAdapter(adapter);
 	}
@@ -133,7 +135,7 @@ public class TasksActivity extends ListActivity{
 			showDialog(DIALOG_COMPLETE);
 		}
 		else{
-			Toast toast = Toast.makeText(this, "The task is made", Toast.LENGTH_SHORT);;
+			Toast toast = Toast.makeText(this, "Already completed", Toast.LENGTH_SHORT);;
 			toast.setGravity(Gravity.CENTER, 0, 0);
 			toast.show();
 		}

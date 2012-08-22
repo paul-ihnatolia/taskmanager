@@ -137,8 +137,9 @@ public class UpdaterService extends Service {
 								content = saveNewFriend(content, authorLogin);
 
 							String createdAt = task.getString("created_at");
+							
 							Task t = new Task(priority, authorLogin, createdAt,
-									login, content, "false", serverId);
+									login, content, "false", serverId, login);
 							taskdatabase.insert(t);
 							
 							
@@ -148,8 +149,9 @@ public class UpdaterService extends Service {
 						
 						//create notification
 						NotificationUtils notification = NotificationUtils.getInstance(context);
-						notification.createInfoNotification("You have new message!");
-												
+						notification.createInfoNotification("You have new message!", login);
+						
+						
 						sendBroadcast(new Intent(
 								"com.taskmanager.TasksActivity").putExtra("sound", true));
 						if(com.taskmanager.activities.NewTaskActivity.isActive() && 

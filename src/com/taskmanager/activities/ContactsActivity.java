@@ -20,14 +20,17 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class ContactsActivity extends ListActivity {
 	UserDataSource userdatabase = new UserDataSource(this);
 	private BroadcastReceiver receiver;
 	private List<User> contactsList;
+	private TextView messageTextView;
 	
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -47,15 +50,10 @@ public class ContactsActivity extends ListActivity {
 		
 		this.registerReceiver(receiver, intentFilter);
 
-		
 		try{
 			createContactsList();
 		}catch (NullPointerException e) {
 			Log.e("error", "NullPointerException");
-			
-			Toast toast = Toast.makeText(this, "No contact", Toast.LENGTH_LONG);
-			toast.setGravity(Gravity.CENTER, 0, 0);
-			toast.show();
 		}
 	}
 	private void createContactsList() {
@@ -63,7 +61,7 @@ public class ContactsActivity extends ListActivity {
 		userdatabase.open();
 		contactsList = userdatabase.selectAll();
 		userdatabase.close();
-		
+
 		ContactsArrayAdapter adapter = new ContactsArrayAdapter(this, contactsList);
 		setListAdapter(adapter);
 	}

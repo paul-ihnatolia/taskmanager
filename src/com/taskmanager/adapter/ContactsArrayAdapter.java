@@ -55,7 +55,7 @@ public class ContactsArrayAdapter extends ArrayAdapter<User>{
 		}
 		
 		 holder.nameTextView.setTextColor(Color.BLACK);
-	     holder.loginTextView.setTextColor(Color.BLACK);
+	     holder.loginTextView.setTextColor(R.color.white_blue);
 	        
 	     holder.nameTextView.setText(list.get(position).getFirstname() + " " + list.get(position).getLastname());
 	     holder.loginTextView.setText(list.get(position).getLogin());

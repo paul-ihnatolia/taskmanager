@@ -26,23 +26,24 @@ public class NotificationUtils {
 	}
 
 	public static NotificationUtils getInstance(Context context){
-		if(instance==null)
+		if(instance == null)
 	        instance = new NotificationUtils(context);
 		else
 	        instance.context = context;
 	    return instance;
 	}
 	
-	public void createInfoNotification(String message){
+	public void createInfoNotification(String message, String login){
 	    int icon = android.R.drawable.sym_action_email;
 	    int id = 0; 
 	    int numberNewTasks = 0;
 	    CharSequence titleText = message; 
 	    long when = System.currentTimeMillis();
 	    
+	    
 	    TaskDataSource taskdatabase = new TaskDataSource(context);
 	    taskdatabase.open();
-	    numberNewTasks = taskdatabase.sizeNewTasks();
+	    numberNewTasks = taskdatabase.sizeNewTasks(login);
 	    
 	    Notification notification = new Notification(icon, titleText, when);
 	    Intent intent = new Intent(context, MainMenuActivity.class);
@@ -55,6 +56,9 @@ public class NotificationUtils {
 		
 		manager.notify(id, notification);
 	    
+	}
+	public void clearInfoNotification(){
+		
 	}
 	
 }

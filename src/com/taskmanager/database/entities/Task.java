@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class Task implements Serializable{
 	public Task(int priority, String author, String time, String recipient,
-			String content, String complete, int serverId) {
+			String content, String complete, int serverId, String owner) {
 		super();
 		this.priority = priority;
 		this.author = author;
@@ -13,9 +13,10 @@ public class Task implements Serializable{
 		this.content = content;
 		this.complete = complete;
 		this.serverId = serverId;
+		this.setOwner(owner);
 	}
 	public Task(long id, int priority, String author, String time,
-			String recipient, String content, String complete, int serverId) {
+			String recipient, String content, String complete, int serverId, String owner) {
 		super();
 		this.id = id;
 		this.priority = priority;
@@ -25,6 +26,7 @@ public class Task implements Serializable{
 		this.content = content;
 		this.complete = complete;
 		this.serverId = serverId;
+		this.setOwner(owner);
 	}
 	public Task() {
 		super();
@@ -39,6 +41,7 @@ public class Task implements Serializable{
 	private String content;
 	private String complete;
 	private int serverId;
+	private String owner;
 	public long getId() {
 		return id;
 	}
@@ -89,6 +92,12 @@ public class Task implements Serializable{
 	}
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+	public String getOwner() {
+		return owner;
+	}
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 		
 }
