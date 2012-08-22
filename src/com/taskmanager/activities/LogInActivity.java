@@ -34,11 +34,12 @@ public class LogInActivity extends Activity implements OnClickListener {
 		
 		sPreferences = getSharedPreferences("CurrentUser", 0);
 		super.onCreate(savedInstanceState);
+	
         if(checkToken()){
 			startActivity(new Intent(LogInActivity.this, MainMenuActivity.class));
 			finish();
 		}	
-		
+	    
         setContentView(R.layout.login);
         
         Button loginB = (Button) findViewById(R.id.loginB);
@@ -98,13 +99,12 @@ public class LogInActivity extends Activity implements OnClickListener {
 				//open database
 				UserDataSource userdatabase = new UserDataSource(this);
 				TaskDataSource taskdatabase = new TaskDataSource(this);
-				/*UserDataSource.open();
-				TaskDataSource.open();*/
+	
 				userdatabase.open();
 				taskdatabase.open();
 				//delete existing tables
 				userdatabase.deleteAll();
-				taskdatabase.deleteAll();
+				//taskdatabase.deleteAll();
 				
 				if(friends != null){
 					for (User user : friends) {

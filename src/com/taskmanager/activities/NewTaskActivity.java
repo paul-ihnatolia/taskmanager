@@ -57,7 +57,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	private static boolean active = false;
 	private BroadcastReceiver receiver;
 	private TasksArrayAdapter adapterTask;
-	private static String login;
+	private static String recipientLogin;
 	
 	@Override
 	protected void onStart() {
@@ -77,9 +77,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	
 	
 	public static String getLogin() {
-		if(login == null)
+		if(recipientLogin == null)
 			return "";
-		return login;
+		return recipientLogin;
 	}
 
 	public static Boolean isActive() {
@@ -103,9 +103,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		
 		Intent intent = getIntent();
 	    String name = intent.getStringExtra("name");
-	     login = intent.getStringExtra("login");
+	    recipientLogin = intent.getStringExtra("login");
 		
-	     Log.d(TAG, "login is "+login);
+	    Log.d(TAG, "login is " + recipientLogin);
 		IntentFilter intentFilter = new IntentFilter(
                 "com.taskmanager.NewTaskActivity");
 		  receiver = new BroadcastReceiver() {
@@ -116,7 +116,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 				
 				Log.i("broadcastreceiver_at_new_task_activity", "Received");
 				if(active == true && adapterTask != null){
-					createTaskList(login);
+					createTaskList(recipientLogin);
 					Log.i(TAG, "creating tasklist...");
 				}
 			}
@@ -124,8 +124,6 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		
 		this.registerReceiver(receiver, intentFilter);
 
-
-		
 		//Create adapter for spinner 
 		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, priorities);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -147,9 +145,9 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		
 
 	    
-	    text.setText(name + " (" + login + ")");
+	    text.setText(name + " (" + recipientLogin + ")");
 		try{
-			createTaskList(login);
+			createTaskList(recipientLogin);
 		}catch (NullPointerException e) {
 			Log.e("error", "NullPointerException");			
 			Toast toast = Toast.makeText(this, "No task", Toast.LENGTH_LONG);;
@@ -166,12 +164,18 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 		unregisterReceiver(receiver);
 	}
 
-	private void createTaskList(String login){
+	private void createTaskList(String authorLogin){
+		String login = getSharedPreferences("CurrentUser", 0).getString("login", null);
+		
 		list = new ArrayList<Task>();
 		taskdatabase.open();
-		list = taskdatabase.getAuthorAndRecipient(login);
+		
+		list = taskdatabase.getOwnerAndAuthor(login, authorLogin);
+		list.addAll(taskdatabase.getAuthorAndRecipient(login, recipientLogin));
+		
 		taskdatabase.close();
     	adapterTask = new TasksArrayAdapter(this, R.id.taskslist, list);
+  
     	ListView listView = (ListView) findViewById(R.id.taskslist);
     	
     	listView.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -187,7 +191,7 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 					showDialog(DIALOG_COMPLETE);
 				}
 				else{
-					Toast toast = Toast.makeText(context, "The task is made", Toast.LENGTH_LONG);;
+					Toast toast = Toast.makeText(context, "Already completed", Toast.LENGTH_LONG);;
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 				}
@@ -199,24 +203,24 @@ public class NewTaskActivity extends Activity implements OnClickListener {
 	//Send task
 	public void onClick(View button) {
 		if(sendButton.getId() == button.getId()){
-			//Intent intent = getIntent();
+			
 			String authToken = getSharedPreferences("CurrentUser", 0).getString("auth_token", null);
-		//	String login = intent.getStringExtra("login");
 		    String content = taskEdit.getText().toString();
 		    Integer pri = priority;
 		    String author = getSharedPreferences("CurrentUser", 0).getString("login", null);
 		    ProgressDialog pg = new ProgressDialog(NewTaskActivity.this);
 		    try {
-		    	String error = new SendTask(pg).execute(authToken,login,content,pri.toString()).get();
+		    	String error = new SendTask(pg).execute(authToken, recipientLogin, content,pri.toString()).get();
 		    	if(error.equals("Success")){
 		    		SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm");
 		    		
 			    	taskdatabase.open();
-			    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), login, content, "true", 0);
+			    	Task task = new Task(pri, author, dateFormat.format(new Date()).toString(), recipientLogin, content, "true", 0, author);
 			    	taskdatabase.insert(task);
 			    	taskdatabase.close();	
-			    	createTaskList(login);
+			    	createTaskList(recipientLogin);
 			    	taskEdit.getText().clear();
+			    	
 		    	}else{
 			    	new AlertDialog.Builder(NewTaskActivity.this).setTitle("Error").setMessage(error).
 			    		setNeutralButton("Ok", null).show();

@@ -12,7 +12,7 @@
 	<string name="remember">Register</string>
 	<string name="send">Відправити</string>
 	<string name="clear">Очистити</string>
-	<string name="message">Написати завдання</string>
+	<string name="message"> Write a message</string>
 	<string name="search">Пошук</string>
 	<string name="priority">Виберіть пріорітет повідомлення</string>
 </resources>
