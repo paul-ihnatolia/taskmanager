@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 
 import com.taskmanager.helpers.HttpConnection;
 
-public class LogOut extends AsyncTask<String, String, String> {
+public class LogOut extends AsyncTask<String, Void, String> {
 	
 	private final String URL = "/protected/logout";
 	private ProgressDialog pleaseWait;

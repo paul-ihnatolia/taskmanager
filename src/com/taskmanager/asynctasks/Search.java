@@ -14,7 +14,7 @@ import android.util.Log;
 import com.taskmanager.database.entities.User;
 import com.taskmanager.helpers.HttpConnection;
 
-public class Search extends AsyncTask<String, String, HashMap<String,Object>> {
+public class Search extends AsyncTask<String, Void, HashMap<String,Object>> {
 	
 	private ProgressDialog pleaseWait;
 	private static String URL = "/protected/find_user";

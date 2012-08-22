@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import com.taskmanager.helpers.HttpConnection;
 
 public class SendRequestForFriendship extends
-		AsyncTask<String, String, HashMap<String, Object>> {
+		AsyncTask<String, Void, HashMap<String, Object>> {
 	
 	
 	private final String URL = "/protected/add_friend";

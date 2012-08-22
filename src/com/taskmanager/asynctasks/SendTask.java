@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 
 import com.taskmanager.helpers.HttpConnection;
 
-public class SendTask extends AsyncTask<String, String, String> {
+public class SendTask extends AsyncTask<String, Void, String> {
 	
 	private final String URL = "/protected/new_task";
 	private ProgressDialog pleaseWait;
